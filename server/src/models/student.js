@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { examSchema } from './regulation.js';
+import { examSchema } from './exam.js';
 import { resultSchema } from "./result.js";
 
 const studentSchema = new mongoose.Schema({

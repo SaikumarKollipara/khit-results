@@ -18,19 +18,20 @@ const regulationSchema = new mongoose.Schema({
 });
 
 const semSchema = new mongoose.Schema({
-  regular: [examSchema],
-  supply: [examSchema],
-  revaluation: [examSchema],
+  regular: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exam'
+  }],
+  supply: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exam'
+  }],
+  revaluation: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exam'
+  }],
 });
 
-export const examSchema = new mongoose.Schema({
-  examData: Date,
-  results: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Result,
-    required: true
-  }]
-});
 
 const Regulation = mongoose.model('Regulation', regulationSchema);
 export default Regulation;
