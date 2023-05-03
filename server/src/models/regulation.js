@@ -1,37 +1,48 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const regulationSchema = new mongoose.Schema({
+const subjectSchema = new mongoose.Schema({
+  code: {
+    type: String,
+    // required: true
+  },
+  name: {
+    type: String,
+    // required: true
+  },
+  credits: {
+    type: Number,
+    // required: true
+  }
+}); 
+
+const branchSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
   },
   sems: {
-    1: semSchema,
-    2: semSchema,
-    3: semSchema,
-    4: semSchema,
-    5: semSchema,
-    6: semSchema,
-    7: semSchema,
-    8: semSchema,
+    1: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    2: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    3: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    4: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    5: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    6: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    7: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
+    8: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
   }
-});
+})
 
-const semSchema = new mongoose.Schema({
-  regular: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Exam'
-  }],
-  supply: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Exam'
-  }],
-  revaluation: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Exam'
-  }],
+const regulationSchema = new mongoose.Schema({
+  name: {
+    type: String, 
+    required: true
+  },
+  branches: [branchSchema],
+  grades: [{
+    grade: {type: String, required: true},
+    value: {type: Number, required: true}
+  }]
 });
-
 
 const Regulation = mongoose.model('Regulation', regulationSchema);
 export default Regulation;

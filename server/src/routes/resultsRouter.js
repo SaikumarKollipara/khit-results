@@ -6,7 +6,4 @@ const router = express.Router();
 
 router.post('/upload', upload.single('results'), uploadResults);
 
-// router.get('/results');
-// router.post('/results');
-
 export default router;

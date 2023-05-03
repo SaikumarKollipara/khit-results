@@ -1,6 +1,7 @@
 import express from 'express';
 
 import resultsRouter from './routes/resultsRouter.js';
+import regulationRouter from './routes/regulationRouter.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
 
 const app = express();
@@ -12,7 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Route handlers
 app.use('/api/v1/results', resultsRouter);
-app.use('*', (req, res) => { res.status(200).send('khit results api'); });
+app.use('/api/v1/regulation', regulationRouter);
+app.get('*', (req, res) => { res.status(400).send('Route not found'); });
 
 app.use(errorHandler);
 

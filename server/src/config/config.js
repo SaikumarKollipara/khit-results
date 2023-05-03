@@ -1,10 +1,13 @@
 import dotenv from "dotenv";
+import { getAbsolutePath } from "../utils/features.js";
 
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
+// import path, { dirname } from "path";
+// import { fileURLToPath } from "url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const CONFIG_FILE_PATH = path.join(__dirname, "../../.env");
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+// const CONFIG_FILE_PATH = path.join(__dirname, "../../.env");
+
+const CONFIG_FILE_PATH = getAbsolutePath(import.meta.url, '../../.env');
 
 dotenv.config({ path: CONFIG_FILE_PATH });
 

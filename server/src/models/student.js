@@ -1,33 +1,40 @@
 import mongoose from "mongoose";
 
-import { examSchema } from './exam.js';
-import { resultSchema } from "./result.js";
 
-const studentSchema = new mongoose.Schema({
+
+const resultSchema = new mongoose.Schema({
   rollNo: {
+    type: String,
+    required: true,
+    match: /^\d{2}8x(1|5)(a|d|e|f|r|s|t)\d{2}[a-z0-9]{2}$/
+  },
+  subCode: {
     type: String,
     required: true
   },
-  regulation: {
+  subName: {
+    type: String,
+    required: true
+  },
+  grade: {
     type: String,
     required: true,
-    match: /^R\d{2}/
+    enum: ['o', 's', 'a', 'b', 'c', 'd', 'e', 'f', 'absent', 'completed', 'no change']
   },
-  sems: {
-    1: semSchema,
-    2: semSchema,
-    3: semSchema,
-    4: semSchema,
-    5: semSchema,
-    6: semSchema,
-    7: semSchema,
-    8: semSchema,
-  },
-  finalResult: {
-    cgpa: Number,
-    backlogs: [String]
+  credits: {
+    type: Number,
+    required: true
   }
 });
+
+export const examSchema = new mongoose.Schema({
+  examDate: {
+    type: Date,
+    required: true
+  },
+  results: [resultSchema]
+}, { timestamps: true });
+
 
 const semSchema = new mongoose.Schema({
   regular: examSchema,
@@ -36,6 +43,36 @@ const semSchema = new mongoose.Schema({
   final: {
     results: [resultSchema],
     sgpa: Number,
+    backlogs: [String]
+  }
+});
+
+const studentSchema = new mongoose.Schema({
+  rollNo: {
+    type: String,
+    required: true,
+    match: /^\d{2}8x(1|5)(a|d|e|f|r|s|t)\d{2}[a-z0-9]{2}$/
+  },
+  regulation: {
+    type: String,
+    // required: true
+  },
+  branch: {
+    type: String,
+    // required: true
+  },
+  sems: {
+    1: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    2: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    3: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    4: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    5: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    6: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    7: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+    8: { type: semSchema, default: { regular: null, supply: [], revaluation: [] } },
+  },
+  finalResult: {
+    cgpa: Number,
     backlogs: [String]
   }
 });
