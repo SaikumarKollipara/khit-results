@@ -22,8 +22,13 @@ const resultSchema = new mongoose.Schema({
     enum: ['o', 's', 'a', 'b', 'c', 'd', 'e', 'f', 'absent', 'completed', 'no change']
   },
   credits: {
-    type: Number,
-    required: true
+    type: mongoose.Schema.Types.Mixed,
+    validate: {
+      validator: function(value) {
+        return typeof value === 'number' || value === 'no change';
+      },
+      message: 'myField must be a number or "no change"'
+    }
   }
 });
 
@@ -43,7 +48,7 @@ const semSchema = new mongoose.Schema({
   final: {
     results: [resultSchema],
     sgpa: Number,
-    backlogs: [String]
+    backlogs: [{ subCode: String, subName: String }]
   }
 });
 

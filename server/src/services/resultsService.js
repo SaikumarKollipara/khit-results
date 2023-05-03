@@ -33,14 +33,23 @@ export function processAndGetJSON (path) {
   return groupedByRollNo;
 }
 
+export async function updateStudent (student, examType, sem, availableRegulations, examDate, resultsData) {
+  if (examType === 'regular and supply') {
+    examType = findExamType(student.regulation, availableRegulations);
+  }
+  const updatedStudent = await saveStudent(student, examType, sem, examDate, resultsData);
+  return updatedStudent;
+}
+
 
 export async function createStudent (rollNo, examType, sem, availableRegulations, examDate, resultsData) {
   const { regulation, branch } = findRegulationAndBranch(rollNo, availableRegulations, resultsData[0].subCode);
   if (examType === 'regular and supply') {
     examType = findExamType(regulation, availableRegulations);
   }
-  const newStudent = new Student({ rollNo, regulation, branch });
-  await saveStudent(newStudent, examType, sem, examDate, resultsData);
+  let newStudent = new Student({ rollNo, regulation, branch });
+  newStudent = await saveStudent(newStudent, examType, sem, examDate, resultsData);
+  return newStudent;
 }
 
 async function saveStudent (student, examType, sem, examDate, resultsData) {
@@ -55,8 +64,63 @@ async function saveStudent (student, examType, sem, examDate, resultsData) {
   } else if (examType === 'revaluation') {
     student.sems[sem].revaluation.push(exam);
   }
-  await student.save();
-  // updateFinalResult();
+
+  // Update regular results with supply and revaluation
+  if (student.sems[sem].regular) {
+    const regularResults = student.sems[sem].regular.results;
+    const supplyExams = [...student.sems[sem].supply, ...student.sems[sem].revaluation];
+    let finalResults = student.sems[sem].final.results;
+    if (finalResults.length === 0) {
+      //First time creating final results
+      finalResults = regularResults;
+      for (const exam of supplyExams) {
+        finalResults = getCombinedResults(finalResults, exam.results);
+      }
+    } else {
+      //Already having final results
+      finalResults = student.sems[sem].final.results;
+      finalResults = getCombinedResults(finalResults, exam.results);
+    }
+    const backlogs = []
+    finalResults.forEach( result => {
+      if (result.credits === 0 && result.grade !== 'completed') {
+        backlogs.push({ subCode: result.subCode, subName: result.subName });
+      }
+    })
+    student.sems[sem].final.results = finalResults;
+    student.sems[sem].final.backlogs = backlogs;
+  }
+  student = await student.save();
+  return student; 
+}
+
+function getCombinedResults(actualResults, newResults) {
+  ////////////////////////need optimization
+  for (const newResult of newResults) {
+    for (const actualResult of actualResults) {
+      if (newResult.subCode === actualResult.subCode) {
+        if (newResults.credits !== 'no change' && newResult.credits > actualResult.credits) {
+          actualResult.grade = newResult.grade;
+          actualResult.credits = newResult.credits;
+        }
+        break;
+      }
+    }
+  }
+  return actualResults;
+  
+  // const updatedResults = actualResults.map( actualResult => {
+  //   const newResult = newResults.find( result => 
+  //     result.subCode === actualResult.subCode &&
+  //     result.grade !== actualResult.grade
+  //   );
+  //   if (newResult) {
+  //     const updatedResult = {...actualResult, grade: newResult.grade, credits: newResult.credits};
+  //     return updatedResult;
+  //   }
+  //   return actualResult;
+  // })
+  // return updatedResults;
 
 }
 
@@ -78,14 +142,3 @@ function findExamType (regulation, availableRegulations) {
 }
 
 
-export async function updateStudent (student, examType, sem, availableRegulations, examDate, resultsData) {
-  try {
-    if (examType === 'regular and supply') {
-      examType = findExamType(student.regulation, availableRegulations);
-    }
-    saveStudent(student, examType, sem, examDate, resultsData);
-  } catch (err) {
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    throw err;
-  }
-}

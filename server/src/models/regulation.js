@@ -38,8 +38,8 @@ const regulationSchema = new mongoose.Schema({
     required: true
   },
   branches: [branchSchema],
-  grades: [{
-    grade: {type: String, required: true},
+  gradePoints: [{
+    grade: {type: String, maxlength: 1, required: true},
     value: {type: Number, required: true}
   }]
 });
