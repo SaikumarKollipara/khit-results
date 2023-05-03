@@ -7,7 +7,7 @@ import { getAbsolutePath } from '../utils/features.js';
 export async function uploadResults (req, res, next) {
   try {
     // let { examType, sem, availableRegulations, examDate } = req.body; ///////////regular, supply, regular and supply, revaluation
-    let examType = 'revaluation', sem = '3', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
+    let examType = 'regular', sem = '1', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
     //Process the input data
     availableRegulations = availableRegulations.map( regulation => regulation.toLowerCase() ).sort();
 
@@ -49,6 +49,7 @@ export async function getResults(req, res, next) {
   try {
     const rollNo = req.params.rollNo;
     const student = await Student.findOne({ rollNo });
+    if(!student) return res.status(400).json({ success: false, message: 'Invalid Roll No' });
     return res.status(200).json({ success: true, student });
   } catch (err) {
     next(err);

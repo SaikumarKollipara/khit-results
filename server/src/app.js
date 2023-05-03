@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 import resultsRouter from './routes/resultsRouter.js';
 import regulationRouter from './routes/regulationRouter.js';
@@ -7,6 +8,7 @@ import { errorHandler } from './middlewares/errorMiddleware.js';
 const app = express();
 
 // Middlewares
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
