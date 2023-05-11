@@ -4,81 +4,110 @@ import { getAbsolutePath } from "../utils/features.js";
 import Regulation from "../models/regulation.js";
 
 export async function uploadRegulation (req, res, next) {
-  
 
   try {
-    // let data = excelToJson({ 
-    //   sourceFile: getAbsolutePath(import.meta.url, '../uploads/data.xlsx'),
-    // })
-    // let result = []
-    // for ( const key of Object.keys(data)) {
-    //   const table = data[key]
-    //   if (table.length > 1) {
-    //     result.push(table.slice(1));
-    //   }
-    // }
-    // const branch = {
-    //   name: 'ece',
-    //   sems: {
-    //     1: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     2: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     3: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     4: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     5: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     6: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     7: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //     8: {
-    //       subjects: [],
-    //       totalCredits: 0
-    //     },
-    //   }
-    // }
-    // let count = 1;
-    // for (const sem of result) {
-    //   for (const result of sem.slice(0, sem.length-1)) {
-    //     branch.sems[count].subjects.push(result);
-    //   }
-    //   branch.sems[count].totalCredits = sem.at(-1)['G'];
-    //   count += 1;
-    // }
-    // return res.send(branch);
-
-    // const newRegulation = await Regulation.create({
-    //   name: 'r16',
-    //   grades: [
-    //     { grade: 'o', value: 10 },
-    //     { grade: 's', value: 9 },
-    //     { grade: 'a', value: 8 },
-    //     { grade: 'b', value: 7 },
-    //     { grade: 'c', value: 6 },
-    //     { grade: 'd', value: 5 },
-    //     { grade: 'f', value: 0 }
-    //   ]
-    // });
-
+    const regulation = {
+      name: 'r16',
+      branches: [
+        {
+          name: 'cse',
+          code: '05',
+          sems: {
+            1: { totalCredits: 19 },
+            2: { totalCredits: 21 },
+            3: { totalCredits: 22 },
+            4: { totalCredits: 21 },
+            5: { totalCredits: 19 },
+            6: { totalCredits: 21 },
+            7: { totalCredits: 21 },
+            8: { totalCredits: 16 },
+          }
+        },
+        {
+          name: 'ece',
+          code: '04',
+          sems: {
+            1: { totalCredits: 19 },
+            2: { totalCredits: 21 },
+            3: { totalCredits: 21 },
+            4: { totalCredits: 21 },
+            5: { totalCredits: 21 },
+            6: { totalCredits: 21 },
+            7: { totalCredits: 21 },
+            8: { totalCredits: 15 },
+          }
+        },
+        {
+          name: 'it',
+          code: '12',
+          sems: {
+            1: { totalCredits: 19 },
+            2: { totalCredits: 21 },
+            3: { totalCredits: 21 },
+            4: { totalCredits: 20 },
+            5: { totalCredits: 22 },
+            6: { totalCredits: 19 },
+            7: { totalCredits: 22 },
+            8: { totalCredits: 16 },
+          }
+        },
+        {
+          name: 'eee',
+          code: '02',
+          sems: {
+            1: { totalCredits: 19 },
+            2: { totalCredits: 21 },
+            3: { totalCredits: 21 },
+            4: { totalCredits: 21 },
+            5: { totalCredits: 20 },
+            6: { totalCredits: 21 },
+            7: { totalCredits: 20 },
+            8: { totalCredits: 17 },
+          }
+        },
+        {
+          name: 'mech',
+          code: '03',
+          sems: {
+            1: { totalCredits: 19 },
+            2: { totalCredits: 21 },
+            3: { totalCredits: 21 },
+            4: { totalCredits: 21 },
+            5: { totalCredits: 20 },
+            6: { totalCredits: 20 },
+            7: { totalCredits: 18 },
+            8: { totalCredits: 20 },
+          }
+        },
+        {
+          name: 'civil',
+          code: '01',
+          sems: {
+            1: { totalCredits: 19.5 },
+            2: { totalCredits: 20.5 },
+            3: { totalCredits: 21 },
+            4: { totalCredits: 19 },
+            5: { totalCredits: 20 },
+            6: { totalCredits: 22 },
+            7: { totalCredits: 21 },
+            8: { totalCredits: 17 },
+          }
+        }
+      ],
+      gradePoints: [
+        { grade: 'o', value: 10 },
+        { grade: 's', value: 9 },
+        { grade: 'a', value: 8 },
+        { grade: 'b', value: 7 },
+        { grade: 'c', value: 6 },
+        { grade: 'd', value: 5 },
+        { grade: 'f', value: 0 },
+        { grade: 'absent', value: 0 },
+        { grade: 'completed', value: 1 }
+      ]
+    }
+    await Regulation.create(regulation);
     return res.status(201).json({ success: true, message: 'Regulation created successfully' });
-    
   } catch (err) {
     next(err);
   }

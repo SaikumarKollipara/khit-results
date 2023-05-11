@@ -3,15 +3,15 @@ import mongoose from "mongoose";
 const subjectSchema = new mongoose.Schema({
   code: {
     type: String,
-    // required: true
+    required: true
   },
   name: {
     type: String,
-    // required: true
+    required: true
   },
   credits: {
     type: Number,
-    // required: true
+    required: true
   }
 }); 
 
@@ -19,6 +19,11 @@ const branchSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
+  },
+  code: {
+    type: String,
+    required: true,
+    maxlength: 2
   },
   sems: {
     1: { subjects: [subjectSchema], totalCredits: { type: Number, require: true }},
@@ -35,11 +40,12 @@ const branchSchema = new mongoose.Schema({
 const regulationSchema = new mongoose.Schema({
   name: {
     type: String, 
-    required: true
+    required: true,
+    unique: true,
   },
   branches: [branchSchema],
   gradePoints: [{
-    grade: {type: String, maxlength: 1, required: true},
+    grade: {type: String, required: true},
     value: {type: Number, required: true}
   }]
 });

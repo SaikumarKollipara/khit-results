@@ -1,13 +1,20 @@
 import fs from 'fs';
 
+import { AppError } from '../middlewares/errorMiddleware.js';
 import Student from '../models/student.js';
-import { createStudent, processAndGetJSON, updateStudent } from '../services/resultsService.js';
+import { calculateFinalResult, createStudent, processAndGetJSON, updateStudent } from '../services/resultsService.js';
 import { getAbsolutePath } from '../utils/features.js';
+import Regulation from '../models/regulation.js';
 
-export async function uploadResults (req, res, next) {
+export async function uploadResults(req, res, next) {
   try {
-    // let { examType, sem, availableRegulations, examDate } = req.body; ///////////regular, supply, regular and supply, revaluation
-    let examType = 'regular', sem = '1', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
+    let { examType, sem, availableRegulations, examDate } = req.body; ///////////regular, supply, regular and supply, revaluation
+    // let examType = 'regular and supply', sem = '2', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
+    let regulationData = await Regulation.find().select('name -_id');
+    regulationData = regulationData.map( reg => reg.name );
+    for ( const regulation of availableRegulations ) {
+      if (!(regulationData.includes(regulation))) throw new AppError(`${regulation} is not available`)
+    }
     //Process the input data
     availableRegulations = availableRegulations.map( regulation => regulation.toLowerCase() ).sort();
 
@@ -32,6 +39,7 @@ export async function uploadResults (req, res, next) {
       } else {
         student = await updateStudent(existedStudent, examType, sem, availableRegulations, examDate, resultsData[rollNo]);
       }
+      await calculateFinalResult(student);
     }
     
     return res.status(200).json({ success: true, message: 'Results uploaded successfully' });

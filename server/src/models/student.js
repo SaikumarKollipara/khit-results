@@ -19,7 +19,7 @@ const resultSchema = new mongoose.Schema({
   grade: {
     type: String,
     required: true,
-    enum: ['o', 's', 'a', 'b', 'c', 'd', 'e', 'f', 'absent', 'completed', 'no change']
+    // enum: ['o', 's', 'a+', 'a', 'b', 'c', 'd', 'e', 'f', 'absent', 'completed', 'no change']
   },
   credits: {
     type: mongoose.Schema.Types.Mixed,
@@ -78,7 +78,7 @@ const studentSchema = new mongoose.Schema({
   },
   finalResult: {
     cgpa: Number,
-    backlogs: [String]
+    backlogs: [{ subCode: String, subName: String }]
   }
 });
 

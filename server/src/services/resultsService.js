@@ -1,8 +1,10 @@
 import excelToJson from 'convert-excel-to-json';
 import Student from '../models/student.js';
+import Regulation from '../models/regulation.js';
 
 
-export function processAndGetJSON (path) {
+// ----------------------------------------------uploadResults---------------------------------------------------------------- 
+export function processAndGetJSON(path) {
   let data = excelToJson({ 
     sourceFile: path,
     columnToKey: {
@@ -43,18 +45,19 @@ export async function updateStudent (student, examType, sem, availableRegulation
 
 
 export async function createStudent (rollNo, examType, sem, availableRegulations, examDate, resultsData) {
-  const { regulation, branch } = findRegulationAndBranch(rollNo, availableRegulations, resultsData[0].subCode);
+  const { regulation, branch } = await findRegulationAndBranch(rollNo, availableRegulations, resultsData[0].subCode);
   if (examType === 'regular and supply') {
     examType = findExamType(regulation, availableRegulations);
   }
-  let newStudent = new Student({ rollNo, regulation, branch });
+  let newStudent = await Student.create({ rollNo, regulation, branch });
   newStudent = await saveStudent(newStudent, examType, sem, examDate, resultsData);
   return newStudent;
 }
 
-async function saveStudent (student, examType, sem, examDate, resultsData) {
+async function saveStudent(student, examType, sem, examDate, resultsData) {
+
   const exam = {
-    examDate,
+    examDate: new Date(examDate),
     results: resultsData
   }
   if (examType === 'regular') {
@@ -65,11 +68,13 @@ async function saveStudent (student, examType, sem, examDate, resultsData) {
     student.sems[sem].revaluation.push(exam);
   }
 
-  // Update regular results with supply and revaluation
+  // Update regular results with supply and revaluation and save it in final
   if (student.sems[sem].regular) {
     const regularResults = student.sems[sem].regular.results;
     const supplyExams = [...student.sems[sem].supply, ...student.sems[sem].revaluation];
     let finalResults = student.sems[sem].final.results;
+    const backlogs = []
+
     if (finalResults.length === 0) {
       //First time creating final results
       finalResults = regularResults;
@@ -81,7 +86,6 @@ async function saveStudent (student, examType, sem, examDate, resultsData) {
       finalResults = student.sems[sem].final.results;
       finalResults = getCombinedResults(finalResults, exam.results);
     }
-    const backlogs = []
     finalResults.forEach( result => {
       if (result.credits === 0 && result.grade !== 'completed') {
         backlogs.push({ subCode: result.subCode, subName: result.subName });
@@ -89,10 +93,88 @@ async function saveStudent (student, examType, sem, examDate, resultsData) {
     })
     student.sems[sem].final.results = finalResults;
     student.sems[sem].final.backlogs = backlogs;
+    student.sems[sem].final.sgpa = await calculateSGPA(student, sem);
   }
-  student = await student.save();
+  
+  await student.save();
   return student; 
 }
+
+
+
+async function calculateSGPA(student, semNumber) {
+  const havingBacklogs = student.sems[semNumber].final.backlogs.length !== 0;
+  const regulationData = await Regulation.findOne({ name: student.regulation });
+    const GRADE_POINTS_MAP = {};
+  const sem = regulationData.branches.find( branch => branch.name === student.branch ).sems[semNumber];
+  let SGPA = 0, sumOfGxC = 0, totalCredits = 0;
+
+  regulationData.gradePoints.forEach( gradePoint => {
+    GRADE_POINTS_MAP[gradePoint.grade] = gradePoint.value;
+  })
+
+  // If subject credits uploaded take credits from that, else from results data
+  if (sem.subjects[0].credits) {
+    totalCredits = sem.subjects.reduce( (sumOfCredits, subject) => sumOfCredits + subject.credits, 0);
+  } else {
+    totalCredits = sem.totalCredits;
+  }
+
+  // Code to avoid conflict of showing different totalcredits in syllabus sheet and resutls
+  // The below code will take the totalCredits from student results and update the db
+  // if(havingBacklogs) {
+  //   // Get credits from Regulation Model
+  //   totalCredits = sem.totalCredits;
+  // } else {
+  //   // Get credits from student itself
+  //   totalCredits = student.sems[semNumber].final.results.reduce( (sumOfCredits, result) => sumOfCredits + result.credits, 0 );
+  //   // Update DB with credits
+  //   const regulation = student.regulation;
+  //   const branchName = student.branch;
+  //   const newTotalCredits = totalCredits;
+  //   await Regulation.findOneAndUpdate(
+  //     { name: regulation },
+  //     { $set: { [`branches.$[branch].sems.${semNumber}.totalCredits`]: newTotalCredits } },
+  //     { arrayFilters: [{ 'branch.name': branchName }] }
+  //   )
+  // }
+  student.sems[semNumber].final.results.forEach( result => {
+    sumOfGxC += GRADE_POINTS_MAP[result.grade] * result.credits
+  })
+  SGPA = sumOfGxC / totalCredits;
+  return SGPA;
+}
+
+export async function calculateFinalResult(student) {
+  let backlogs = [];
+  const sems = student.sems;
+  for (let sem=1; sem <= 8; sem++) {
+    backlogs = [...backlogs, ...sems[sem].final.backlogs];
+  }
+  student.finalResult.cgpa = await calculateCGPA(student);
+  student.finalResult.backlogs = backlogs;
+  await student.save();
+}
+
+
+
+async function calculateCGPA(student) {
+  const regulation = await Regulation.findOne({ name: student.regulation });
+  let CGPA = 0, sumOfSGPAxC = 0, totalCreditsOfAllSems = 0;
+  const totalCredits = regulation.branches.find( branch => branch.name === student.branch ).sems;
+
+  const SGPAOfSem = student.sems;
+  for (let sem=1; sem<=8; sem++) {
+    const SGPA = SGPAOfSem[sem].final.sgpa;
+    if (SGPA){
+      sumOfSGPAxC += (SGPA) * totalCredits[sem].totalCredits;
+      totalCreditsOfAllSems += totalCredits[sem].totalCredits;
+    }
+  }
+  CGPA = sumOfSGPAxC / totalCreditsOfAllSems;
+  if (CGPA) return CGPA;
+}
+
 
 function getCombinedResults(actualResults, newResults) {
   ////////////////////////need optimization
@@ -124,15 +206,31 @@ function getCombinedResults(actualResults, newResults) {
 
 }
 
-function findRegulationAndBranch (rollNo, availableRegulations, subCode) {
+async function findRegulationAndBranch (rollNo, availableRegulations) {
+  // const BRANCH_MAP = {
+  //   '01': 'civil',
+  //   '02': 'eee',
+  //   '03': 'mech',
+  //   '04': 'ece',
+  //   '12': 'it',
+  //   '05': 'cse',
+  //   '42': 'ai&ml',
+  //   '43': 'ai',
+  //   '44': 'ds',
+  //   '45': 'ai&ds',
+  // };
   const admissionYear = rollNo.slice(0, 2);
-  let regulation = '', branch = '';
+  let regulation = '';
   for (const reg of [...availableRegulations].reverse()) {
     if (('r'+admissionYear) >= reg) {
       regulation = reg;
       break;
     }
   }
+  const regulationData = await Regulation.findOne({ name: regulation });
+  const branch_map = {};
+  regulationData.branches.forEach( branch => branch_map[branch.code] = branch.name )
+  const branch = branch_map[rollNo.slice(6, 8)];
   return { regulation, branch };
 }
 
@@ -141,4 +239,4 @@ function findExamType (regulation, availableRegulations) {
   return 'supply';
 }
 
-
+// ----------------------------------------------uploadResults---------------------------------------------------------------- 
