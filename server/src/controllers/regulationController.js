@@ -7,7 +7,7 @@ export async function uploadRegulation (req, res, next) {
 
   try {
     const regulation = {
-      name: 'r16',
+      name: 'r19',
       branches: [
         {
           name: 'cse',
@@ -103,7 +103,8 @@ export async function uploadRegulation (req, res, next) {
         { grade: 'd', value: 5 },
         { grade: 'f', value: 0 },
         { grade: 'absent', value: 0 },
-        { grade: 'completed', value: 1 }
+        { grade: 'completed', value: 1 },
+        { grade: 'not completed', value: 0 },
       ]
     }
     await Regulation.create(regulation);

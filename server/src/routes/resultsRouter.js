@@ -4,7 +4,7 @@ import upload from '../config/multer.js';
 
 const router = express.Router();
 
-router.post('/upload', upload.single('results'), uploadResults);
+router.post('/upload', upload.single('file'), uploadResults);
 router.get('/:rollNo', getResults);
 
 export default router;

@@ -9,7 +9,9 @@ import Regulation from '../models/regulation.js';
 export async function uploadResults(req, res, next) {
   try {
     let { examType, sem, availableRegulations, examDate } = req.body; ///////////regular, supply, regular and supply, revaluation
+    availableRegulations = availableRegulations.split(',');
     // let examType = 'regular and supply', sem = '2', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
+    // return res.status(200).send( [examType, sem, availableRegulations, examDate] )
     let regulationData = await Regulation.find().select('name -_id');
     regulationData = regulationData.map( reg => reg.name );
     for ( const regulation of availableRegulations ) {

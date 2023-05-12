@@ -67,7 +67,7 @@ async function saveStudent(student, examType, sem, examDate, resultsData) {
   } else if (examType === 'revaluation') {
     student.sems[sem].revaluation.push(exam);
   }
-
+  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%resultsdata', resultsData);
   // Update regular results with supply and revaluation and save it in final
   if (student.sems[sem].regular) {
     const regularResults = student.sems[sem].regular.results;
@@ -114,7 +114,7 @@ async function calculateSGPA(student, semNumber) {
   })
 
   // If subject credits uploaded take credits from that, else from results data
-  if (sem.subjects[0].credits) {
+  if (sem.subjects[0]) {
     totalCredits = sem.subjects.reduce( (sumOfCredits, subject) => sumOfCredits + subject.credits, 0);
   } else {
     totalCredits = sem.totalCredits;
@@ -140,6 +140,7 @@ async function calculateSGPA(student, semNumber) {
   // }
   student.sems[semNumber].final.results.forEach( result => {
     sumOfGxC += GRADE_POINTS_MAP[result.grade] * result.credits
+    console.log(result.grade)
   })
   SGPA = sumOfGxC / totalCredits;
   return SGPA;
