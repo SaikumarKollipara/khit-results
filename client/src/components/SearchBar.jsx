@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-components';
 import { FiSearch } from 'react-icons/fi';
 
-export default function SearchBar({ width, size, boxShadow, style, onChange }) {
+export default function SearchBar({ width, size, boxShadow, style, onChange, handleSearch, setRollNo }) {
   return (
-    <Wrapper onChange={onChange} style={style} width={width} size={size} boxShadow={boxShadow}>
-      <FiSearch id="icon" />
-      <input type="text" placeholder='Enter your Roll No'></input>
+    <Wrapper style={style} width={width} size={size} boxShadow={boxShadow}>
+      <FiSearch onClick={handleSearch} id="icon" />
+      <input onChange={(e) => setRollNo(e.target.value)} type="text" placeholder='Enter your Roll No'></input>
     </Wrapper>
   )
 }
@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   position: relative;
   background-color: var(--white1);
   overflow: hidden;
-  border-radius: var(--border-radius3);
+  border-radius: var(--border-radius1);
   box-shadow: ${props => !props.boxShadow ? 'var(--box-shadow1)' : 'none'};
   input{
     font-size: ${props => props.size}rem;

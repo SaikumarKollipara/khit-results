@@ -18,7 +18,8 @@
   --font-size1: 0.8rem;
   --font-size2: 1rem;
   --font-size3: 1.5rem;
-  --font-size4: 3.25rem;
+  --font-size4: 1.7rem;
+  --font-size5: 3.25rem;
 
   --blue1: #6192A8;
   --blue2: #DDE8ED;
@@ -35,16 +36,18 @@
 
   --box-shadow1: 0 4px 7px 1px rgba(0, 0, 0, 0.1);
 
-  --border-radius1: 13px;
+  --border-radius1: 7px;
   --border-radius2: 10px;
-  --border-radius3: 7px;
+  --border-radius3: 13px;
 }
 
 body {
   width: 100%;
+  margin: 0 auto;
   color: var(--black1);
   background-color: var(--blue2);
   line-height: 1.5;
+  font-size: var(--font-size2);
 }
 
 /* :root {

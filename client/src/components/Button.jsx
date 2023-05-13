@@ -11,7 +11,7 @@ export default function Button({ children, size, color, bg }) {
 
 const Wrapper = styled.button`
   padding: 8px 25px;
-  border-radius: var(--border-radius3);
+  border-radius: var(--border-radius1);
   font-size: ${ props => props.size }rem;
   color: ${ props => props.color };
   background-color: ${ props => props.bg };

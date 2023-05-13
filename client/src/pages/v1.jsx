@@ -77,7 +77,7 @@ export default function Home() {
         </DisplayResults> 
       }
     </Wrapper>
-    <ToastContainer /> 
+    {/* <ToastContainer />  */}
   </>
 }
 
