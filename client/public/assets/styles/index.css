@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Noto+Serif:wght@400;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;700;900&family=Noto+Serif:wght@400;700&display=swap');
 
 
 * {
@@ -8,12 +7,44 @@
   box-sizing: border-box;
 }
 
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  --font-size1: 3.25rem;
+  --font-size2: 1.5rem;
+  --font-size3: 1rem;
+  --font-size4: 0.8rem;
+  
+  --font-size1: 0.8rem;
+  --font-size2: 1rem;
+  --font-size3: 1.5rem;
+  --font-size4: 3.25rem;
+
+  --blue1: #6192A8;
+  --blue2: #DDE8ED;
+  --black1: #000000;
+  --black2: #797979;
+  --white1: #FFFFFF;
+  --white2: #F5F5F5;
+
+  --font-weight1: 100;
+  --font-weight2: 200;
+  --font-weight3: 400;
+  --font-weight4: 700;
+  --font-weight5: 900;
+
+  --box-shadow1: 0 4px 7px 1px rgba(0, 0, 0, 0.1);
+
+  --border-radius1: 13px;
+  --border-radius2: 10px;
+  --border-radius3: 7px;
+}
+
 body {
-  width: 100px;
-  overflow: hidden;
-  background-color: #efefef;
-  color: #505050;
-  font-family: 'Inter', sans-serif;
+  width: 100%;
+  color: var(--black1);
+  background-color: var(--blue2);
+  line-height: 1.5;
 }
 
 /* :root {

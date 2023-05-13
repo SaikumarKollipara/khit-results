@@ -1,193 +1,114 @@
-import React from 'react'
-import { useState, useRef } from 'react';
+import React, { useState } from 'react'
 import styled from 'styled-components';
-import { FiSearch } from "react-icons/fi";
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { useReactToPrint } from 'react-to-print';
+import axios from 'axios';
+
+import Button from '../components/Button';
+import SearchBar from '../components/SearchBar';
 
 export default function Home() {
-  const [rollNo, setRollNo] = useState(''); 
-  const [student, setStudent] = useState({});
-  const [display, setDisplay] = useState('search');
-  const [subjects, setSubjects] = useState([]);
 
-  const printComponentRef = useRef();
+  const [rollNo, setRollNo] = useState('');
   
   async function handleSearch(e) {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const { data } = await axios.get(`http://localhost:5000/api/v1/results/${rollNo}`);
-      const tempStudent = {
-        sems: [],
-        total: {}
-      }
-      for (const sem in data.student.sems) {
-        if (data.student.sems[sem].final.results.length > 0) {
-          tempStudent.sems.push({ name: sem, results: data.student.sems[sem].final.results, backlogs: data.student.sems[sem].final.backlogs });
-        }
-      }
-      tempStudent.total = data.student.finalResult;
-      setStudent(tempStudent);
-      setDisplay('sems');
-      console.log(tempStudent)
-    } catch (err) {
+      console.log(data);
+    } catch(err) {
       if (err.response) {
         toast.error(err.response.data.message, {
-          position: toast.POSITION.TOP_RIGHT
+          position: toast.POSITION.TOP_CENTER
         });
       }
     }
   }
-
-  const handlePrint = useReactToPrint({ content: () => printComponentRef.current })
   
-  return <>
-    <Wrapper ref={printComponentRef} >
-      {display === 'search' && <Header>KHIT RESULTS</Header>}
-      <Input display={display} onSubmit={handleSearch}>
-        <input onChange={(e) => { setRollNo(e.target.value) }} type="text" placeholder='Enter your Roll No' />
-        <FiSearch onClick={handleSearch} className='icon' />
-      </Input>
-      {
-        display === 'sems' && 
-        <DisplayResults>
-          {student.sems.map( sem => <Sem onClick={() => {setDisplay('subjects'); setSubjects(sem.results)}}><h2>{sem.name}st SEM</h2><button>Details</button></Sem>)}
-        </DisplayResults>
-      }
-      {
-        display === 'subjects' && 
-        <DisplayResults >
-          <div className='navigation'>
-            <p onClick={() => {setDisplay('sems')}}>{'< Back'}</p>
-            <button onClick={handlePrint} >print</button>
-          </div>
-          <Subject style={{backgroundColor: 'dodgerblue', color: 'white'}}>
-              <p style={{flex: 2}}>Subject Name</p>
-              <p style={{flex: 1}}>Grade</p>
-              <p style={{flex: 1}}>Credits</p>
-            </Subject> 
-          {subjects.map( subject => 
-            <Subject>
-              <span>{subject.subName}</span>
-              <span>{subject.grade}</span>
-              <span>{subject.credits}</span>
-            </Subject> 
-          )}
-        </DisplayResults> 
-      }
+  return (
+    <Wrapper>
+      <Header>
+        <Logo>KHIT</Logo>
+        <Links>
+          <span className="register">Register</span>
+          <span className="or">or</span>
+          <Button size={1.1875} color={'white'} bg={'black'}>Login</Button>
+        </Links>
+      </Header>
+      <ContentContainer>
+        <Content>
+          <p className='para1'>One stop for all your</p>
+          <p className='para2'>Exam Results.</p>
+          <p className='para3'>Getting results online made easy</p>
+          <p className='para4'>All we need is just you roll no.</p>
+          <form onSubmit={handleSearch}>
+            <SearchBar onChange={(e)=>setRollNo(e.target.value)} style={{marginTop: '3.5rem'}} width={29} size={1.15} />
+          </form>
+        </Content>
+        <Image src='/assets/images/exams-bro.svg' />
+      </ContentContainer>
+      <ToastContainer />
     </Wrapper>
-    <ToastContainer /> 
-  </>
+  )
 }
 
-
 const Wrapper = styled.div`
+  height: 100vh;
   width: 100%;
+  padding: 0 13%;
+  background-image: linear-gradient(to bottom left, var(--blue1), var(--white2));
 `
 const Header = styled.div`
-  font-size: 3rem;
-  font-weight: bold;
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, 0);
-`
-const Input = styled.form`
-  width: 55%;
-  height: 3rem;
-  padding: 5px 60px;
-  background-color: white;
-  position: absolute;
-  top: ${props => props.display === 'search' ? '50%' : '4rem' };
-  left: 50%;
-  transform: translate(-50%, -100%);
-  /* transition: all 0.5s ease-in; */
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.20);
-  input{
-    width: 100%;
-    height: 100%;
-    background: none;
-    border: none;
-    outline: none;
-    font-size: 1.3rem;
-    color: #505050;
-  }
-  .icon{
-    position: absolute;
-    top: 50%;
-    font-size: 1.5rem;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-  }
-`
-const DisplayResults = styled.div`
-  width: 65%;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  margin-bottom: 20px;
-  .navigation {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    p{
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-    }
-    button {
-      background-color: dodgerblue;
-      padding: 5px 17px;
-      border: none;
-      border-radius: 3px;
-      font-size: 1rem;
-      color: white;
-      cursor: pointer;
-    }
-  }
-`
-const Sem = styled.div`
   width: 100%;
-  height: 100px;
-  background-color: white;
+  height: 5rem;
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
-  button {
-    background-color: dodgerblue;
-    border: none;
-    font-size: 1.2rem;
-    border-radius: 3px;
-    outline: none;
-    color: white;
-    padding: 7px 15px;
+`
+const Logo = styled.span` 
+  font-size: var(--font-size3);
+  font-weight: var(--font-weight4);
+`
+const Links = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  .register {
+    font-size: 20px;
+    font-weight: var(--font-weight4);
     cursor: pointer;
   }
+  .or {
+    font-size: var(--font-size2);
+    font-weight: var(--font-weight4);
+  }
 `
-const Subject = styled.div`
-    width: 100%;
-    height: 3rem;
-    background-color: white;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 10px;
-    span:nth-child(1){
-      flex: 2;
-    }
-    span:nth-child(2){
-      flex: 1;
-    }
-    span:nth-child(3){
-      flex: 1;
-    }
+
+const ContentContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-top: 11rem;
+`
+const Content = styled.div`
+  width: 50%;
+  .para1{
+    font-size: var(--font-size4);
+    line-height: 1;
+  }
+  .para2{
+    font-size: var(--font-size4);
+    font-weight: var(--font-weight4);
+  }
+  .para3, .para4{
+    font-size: var(--font-size3);
+    font-weight: var(--font-weight3);
+    margin-top: 5px;
+  }
+`
+const Image = styled.img`
+  width: 43%;
+  position: absolute;
+  bottom: -18%;
+  right: -5%;
 `
