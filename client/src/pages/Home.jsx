@@ -32,7 +32,7 @@ export default function Home() {
         <Links>
           <span className="register">Register</span>
           <span className="or">or</span>
-          <Button size={1.1875} color={'white'} bg={'black'}>Login</Button>
+          <Button color={'white'} bg={'black'}>Login</Button>
         </Links>
       </Header>
       <ContentContainer>

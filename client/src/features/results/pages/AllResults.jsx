@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import Layout from '../components/Layout';
 import Heading from '../components/Heading';
 import { useNavigate } from 'react-router-dom';
+import { getCompletedSemesters } from '../../../utils/helpers';
+import Semester from '../components/Semester';
 
 export default function AllResults() {
   const navigate = useNavigate();
@@ -24,14 +26,15 @@ export default function AllResults() {
       <FirstSection>
         <Heading>
           <div className='content'>
-            <Greeting>Hello 198X1A0575!</Greeting>
+            <Greeting>Hello There!</Greeting>
             <Description>It's good to see you again.</Description>
           </div>
           <WavingHand src='/assets/images/waving-hand.png' />
         </Heading>
-        <p>Results of {student.rollNo}</p>
+        <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
         <Semesters>
-
+          <p className='heading'>Semesters</p>
+          {getCompletedSemesters(student).map((semester, idx) => <Semester semester={semester} />)}
         </Semesters>
       </FirstSection>
       <SecondSection className="second-section">fskljldfskj</SecondSection>
@@ -54,6 +57,17 @@ const Description = styled.p`
 const WavingHand = styled.img`
   width: 95px;
 `
+const RollNo = styled.p`
+  font-size: var(--font-size1);
+  font-weight: var(--font-weight4);
+  margin-top: 50px;
+  color: var(--black2);
+`
 const Semesters = styled.div`
-  
+  width: 100%;
+  .heading {
+    font-size: var(--font-size3);
+    font-weight: var(--font-weight4);
+    margin-bottom: 10px;
+  }
 `
