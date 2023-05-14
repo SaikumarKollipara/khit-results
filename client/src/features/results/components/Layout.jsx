@@ -1,11 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import { BiBell, BiUserCircle } from 'react-icons/bi';
 
-export default function Layout({ children }) {
+import SearchBar from '../../../components/SearchBar'
+
+export default function Layout({ children=['', ''] }) {
   return (
     <Wrapper>
       <FirstSection>{children[0]}</FirstSection>
-      <SecondSection>{children[1]}</SecondSection>
+      <SecondSection>
+        <NavBar>
+          <SearchBar width={'80%'} boxShadow={false} size={'var(--font-size2)'} />
+          <BiBell className='notification' />
+          <BiUserCircle className='profile' />
+        </NavBar>
+        {children[1]}
+      </SecondSection>
     </Wrapper>
   )
 }
@@ -23,5 +33,20 @@ const FirstSection = styled.div`
 `
 const SecondSection = styled.div`
   flex: 1;
-  border: 1px solid green;
+  /* border: 1px solid green; */
+`
+const NavBar = styled.nav`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 3rem;
+  .notification, .profile {
+    cursor: pointer;
+  }
+  .notification {
+    font-size: 2.1rem;
+  }
+  .profile {
+    font-size: 2.2rem;
+  }
 `

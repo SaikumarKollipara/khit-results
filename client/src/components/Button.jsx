@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Button({ children, size, color, bg }) {
+export default function Button({ children, size, color, bg, onClick }) {
   return (
-    <Wrapper size={size} color={color} bg={bg}>
+    <Wrapper onClick={onClick} size={size} color={color} bg={bg}>
       {children}
     </Wrapper>
   )

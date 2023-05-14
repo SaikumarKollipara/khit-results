@@ -1,20 +1,23 @@
-export function getCompletedSemesters(student) {
-  const semesters = student.sems;
-  const completedSemesters = []
-  for (const semNumber in semesters) {
-    const semester = semesters[semNumber];
+export function getSemestersData(student) {
+  const semesters = []
+  for (const semNumber in student.sems) {
+    const semester = student.sems[semNumber];
     const isCompleted = semester.regular;
     if (isCompleted) {
       const completedSemester = { 
-        ...semester.final, 
+        ...semester.final,
+        isCompleted,
         number: getFormattedSemNumber(semNumber), 
-        percentage: getPercetage(semester.final.sgpa).toFixed(2),
+        percentage: getPercentage(semester.final.sgpa).toFixed(2),
         sgpa: semester.final.sgpa.toFixed(2) 
       }
-      completedSemesters.push(completedSemester);
+      semesters.push(completedSemester);
+    } else {
+      const unCompletedSemester = { isCompleted, number: getFormattedSemNumber(semNumber) };
+      semesters.push(unCompletedSemester);
     }
   }
-  return completedSemesters;
+  return semesters;
 }
 
 function getFormattedSemNumber(semNumber) {
@@ -23,6 +26,6 @@ function getFormattedSemNumber(semNumber) {
   return year + '-' + sem;
 }
 
-function getPercetage(gpa) {
+export function getPercentage(gpa) {
   return (gpa * 10) - 7.5;
 }

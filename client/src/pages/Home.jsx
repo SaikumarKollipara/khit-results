@@ -1,30 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
 
 import Button from '../components/Button';
 import SearchBar from '../components/SearchBar';
-import { getResults } from '../features/results/resultsService';
-import { setStudent } from '../features/results/resultsSlice';
-import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
-  const [rollNo, setRollNo] = useState('');
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  async function handleSearch(e) {
-    try {
-      e.preventDefault();
-      const student = await getResults(rollNo);
-      if (student) {
-        dispatch(setStudent(student));
-        navigate(`/results/all/${student.rollNo}`);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  
   return (
     <Wrapper>
       <Header>
@@ -41,9 +21,7 @@ export default function Home() {
           <p className='para2'>Exam Results.</p>
           <p className='para3'>Getting results online made easy</p>
           <p className='para4'>All we need is just you roll no.</p>
-          <form onSubmit={handleSearch}>
-            <SearchBar handleSearch={handleSearch} setRollNo={setRollNo} style={{marginTop: '3.5rem'}} width={29} size={1.15} />
-          </form>
+          <SearchBar style={{marginTop: '3.5rem'}} width={'29rem'} size={'1.15rem'} />
         </Content>
         <Image src='/assets/images/exams-bro.svg' />
       </ContentContainer>

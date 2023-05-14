@@ -1,28 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Button from '../../../components/Button';
 
 export default function Semester({ semester }) {
-  console.log(semester);
+  const { student } = useSelector(store => store.results );
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <SemNumber>{semester.number}</SemNumber>
-      <ContentWrapper>
-        <Content>
-          <p className="number">{semester.percentage}</p>
-          <p className="subscript">&nbsp;%</p>
-        </Content>
-        <Content>
-          <p className="number">{semester.sgpa}</p>
-          <p className="subscript">&nbsp;SGPA</p>
-        </Content>
-        <Content>
-          <p className="number">{semester.backlogs.length}</p>
-          <p className="subscript">&nbsp;Backlogs</p>
-        </Content>
-      </ContentWrapper>
-      <Button size={'var(--font-size1)'} >View Details</Button>
+      {semester.isCompleted ? 
+        <>
+          <ContentWrapper>
+          <Content>
+            <p className="number">{semester.percentage}</p>
+            <p className="subscript">&nbsp;%</p>
+          </Content>
+          <Content>
+            <p className="number">{semester.sgpa}</p>
+            <p className="subscript">&nbsp;SGPA</p>
+          </Content>
+          <Content>
+            <p className="number">{semester.backlogs.length}</p>
+            <p className="subscript">&nbsp;Backlogs</p>
+          </Content>
+        </ContentWrapper>
+        <Button onClick={()=>navigate(`/results/${semester.number}/${student.rollNo}`)} size={'var(--font-size1)'}>View Details</Button>
+        </>
+        :
+        <ContentWrapper>
+          <Content>
+            <p className="not-available">Not Available</p>
+          </Content>
+        </ContentWrapper>
+      }
     </Wrapper>
   )
 }
@@ -64,7 +77,14 @@ const Content = styled.div`
     font-size: var(--font-size3);
   }
   .subscript{
+    font-weight: var(--font-weight3);
     font-size: var(--font-size1);
     margin-bottom: 5px;
+  }
+  .not-available{
+    font-size: var(--font-size3);
+    color: var(--black2);
+    font-weight: var(--font-weight4);
+    margin-right: 3rem;
   }
 `

@@ -43,11 +43,16 @@
 
 body {
   width: 100%;
+  overflow: hidden;
   margin: 0 auto;
   color: var(--black1);
   background-color: var(--blue2);
   line-height: 1.5;
   font-size: var(--font-size2);
+}
+
+a {
+  color: var(--black1);
 }
 
 /* :root {
