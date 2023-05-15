@@ -20,8 +20,7 @@ export default function AllResults() {
     toast.warning('Search using Roll No');
     return <Navigate to={'/'}/>;
   };
-  toast.success(`Results of ${student.rollNo.toUpperCase()}`);
-  // console.log(student)
+  // toast.success(`Results of ${student.rollNo.toUpperCase()}`);
   return (
     <Layout>
       <FirstSection>

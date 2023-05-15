@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   student: {},
-  isLoading: false
+  isLoading: false,
+  currentSemester: {}
 };
 
 export const resultsSlice = createSlice({
@@ -11,9 +12,10 @@ export const resultsSlice = createSlice({
   reducers: {
     setStudent: (state, action) => { state.student = action.payload },
     startLoading: (state) => state.isLoading = true,
-    stopLoading: (state) => state.isLoading = true
+    stopLoading: (state) => state.isLoading = true,
+    setCurrentSemester: (state, action) => { state.currentSemester = action.payload },
   }
 });
 
 export default resultsSlice.reducer;
-export const { setStudent, startLoading, stopLoading } = resultsSlice.actions;
+export const { setStudent, startLoading, stopLoading, setCurrentSemester } = resultsSlice.actions;
