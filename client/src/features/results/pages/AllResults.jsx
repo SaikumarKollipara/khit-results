@@ -87,9 +87,6 @@ const SecondSection = styled.div`
     font-size: var(--font-size4);
     font-weight: var(--font-weight4);
   }
-  .title {
-
-  }
 `
 const Greeting = styled.p`
   font-size: var(--font-size4);

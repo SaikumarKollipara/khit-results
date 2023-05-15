@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
+import { useReactToPrint } from 'react-to-print';
 
 import Layout from '../components/Layout';
-import { deFormatSemNumber } from '../../../utils/helpers';
+import { deFormatSemNumber, getPercentage } from '../../../utils/helpers';
 import Heading from '../components/Heading';
 import Subject from '../components/Subject';
 import { setCurrentSemester } from '../resultsSlice';
 import Button from '../../../components/Button';
+import Container from '../components/Container';
+import CircularProgress from '../components/CircularProgress';
+import { toast } from 'react-toastify';
 
 export default function SemResults() {
   const dispatch = useDispatch();
   const { student } = useSelector(store => store.results);
+  if(Object.keys(student).length === 0) {
+    toast.warning('Search using Roll No');
+    return <Navigate to={'/'}/>;
+  };
   const { sem, rollNo } = useParams();
+  const printComponentRef = useRef();
   const subjects = student.sems[deFormatSemNumber(sem)].final.results;
   dispatch(setCurrentSemester(student.sems[deFormatSemNumber(sem)]));
+  const { currentSemester } = useSelector(store => store.results );
+  const handlePrint = useReactToPrint({ content: () => printComponentRef.current });
   return (
     <Layout>
-      <FirstSection>
+      <FirstSection ref={printComponentRef}>
         <Heading>
           <div className='content'>
             <Description>Results of</Description>
@@ -31,7 +42,7 @@ export default function SemResults() {
         </Heading>
         <p className='heading'>
           <div className="name">Subjects</div>
-          <Button style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Print</Button>
+          <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Print</Button>
         </p>
         <p className="header">
           <span className='code'>Code</span>
@@ -40,11 +51,27 @@ export default function SemResults() {
           <span className='credits'>Credits</span>
         </p>
         <Subjects>
-          {subjects.map((subject, idx) => [<Subject key={idx} idx={idx} subject={subject} />,<Subject key={idx} idx={idx} subject={subject} />])}
+          {subjects.map((subject, idx) => <Subject key={idx} idx={idx} subject={subject} />)}
         </Subjects>
       </FirstSection>
       <SecondSection>
-        f;dk
+        <p className='heading'>Overview</p>
+        <Container>
+          <p className="content">{student.regulation.toUpperCase()}</p>
+          <p className="title">{student.branch}</p>
+        </Container>
+        <Container>
+          <a className="content">{currentSemester.final.backlogs.length}</a>
+          <a className='title' style={{textDecoration: 'underline', cursor: 'pointer'}}>Total backlogs</a>
+        </Container>
+        <Container style={{padding: 0}}>
+          <CircularProgress number={currentSemester.final.sgpa.toFixed(2)} type={'gpa'} />
+          <p className='title' href="">Total SGPA</p>
+        </Container>
+        <Container>
+          <CircularProgress number={getPercentage(currentSemester.final.sgpa).toFixed(2)} type={'percentage'} />
+          <p className='title' href="">Total percentage</p>
+        </Container>
       </SecondSection>
     </Layout>
   )
@@ -91,7 +118,24 @@ const FirstSection = styled.div`
   }
 `
 const SecondSection = styled.div`
-  
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 47% 47%;
+  grid-template-rows: var(--font-size4) 115px 115px auto;
+  justify-content: center;
+  .heading {
+    grid-column: 1 / -1;
+    font-size: var(--font-size3);
+    font-weight: var(--font-weight4);
+    align-self: center;
+  }
+  #graph {
+    grid-column: 1 / -1;
+  }
+  .content {
+    font-size: var(--font-size4);
+    font-weight: var(--font-weight4);
+  }
 `
 const RollNo = styled.p`
   font-size: var(--font-size4);
