@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+import { BACKEND_URL } from '../../data/constants';
 
-const URL = `${import.meta.env.VITE_BACKEND_URL}/api/v1/results/`;
+
+const URL = `${BACKEND_URL}/api/v1/results/`;
 
 export async function getResults(rollNo) {
   try {

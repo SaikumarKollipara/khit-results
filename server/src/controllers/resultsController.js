@@ -5,6 +5,7 @@ import Student from '../models/student.js';
 import { calculateFinalResult, createStudent, processAndGetJSON, updateStudent } from '../services/resultsService.js';
 import { getAbsolutePath } from '../utils/features.js';
 import Regulation from '../models/regulation.js';
+import mongoose from 'mongoose';
 
 export async function uploadResults(req, res, next) {
   try {
