@@ -20,7 +20,7 @@ export default function Upload() {
       form.append('examDate', formData.examDate)
       form.append('file', formData.resultsFile)
       setLoading(true)
-      const res = await axios.post('http://localhost:5000/api/v1/results/upload', form);
+      const res = await axios.post(`${VITE_BACKEND_URL}/api/v1/results/upload`, form);
       setLoading(false)
       console.log(res.data);
     } catch (err) {

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const URL = 'http://localhost:5000/api/v1/results/';
+const URL = `${import.meta.env.VITE_BACKEND_URL}/api/v1/results/`;
 
 export async function getResults(rollNo) {
   try {
