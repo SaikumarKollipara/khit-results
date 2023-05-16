@@ -11,8 +11,8 @@ export const resultsSlice = createSlice({
   initialState,
   reducers: {
     setStudent: (state, action) => { state.student = action.payload },
-    startLoading: (state) => state.isLoading = true,
-    stopLoading: (state) => state.isLoading = true,
+    startLoading: (state) => { state.isLoading = true },
+    stopLoading: (state) => { state.isLoading = false },
     setCurrentSemester: (state, action) => { state.currentSemester = action.payload },
   }
 });

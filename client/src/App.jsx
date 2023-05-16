@@ -4,8 +4,11 @@ import ResultsRoutes from './features/results/resultsRoutes';
 import { ToastContainer } from 'react-toastify';
 import Footer from './components/Footer';
 import UploadRoutes from './features/upload/uploadRoutes';
+import Loading from './components/Loading';
+import { useSelector } from 'react-redux';
 
 export default function App() {
+  const { isLoading } = useSelector(store => store.results );
   return (
     <Router>
       <Routes>
@@ -13,7 +16,8 @@ export default function App() {
       </Routes>
       <ResultsRoutes />
       <UploadRoutes />
-      <ToastContainer hideProgressBar={true} autoClose={1000} position='top-center' />
+      <ToastContainer hideProgressBar={true} autoClose={1300} position='top-center' />
+      {isLoading && <Loading />}
       <Footer />
     </Router>
   )

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import Button from '../components/Button';
 import SearchBar from '../components/SearchBar';
+import Loading from '../components/Loading';
 
 export default function Home() {
   return (

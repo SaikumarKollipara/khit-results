@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
 import { FiSearch } from 'react-icons/fi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { setStudent } from '../features/results/resultsSlice';
+import { setStudent, startLoading, stopLoading } from '../features/results/resultsSlice';
 import { getResults } from '../features/results/resultsService';
 
 
@@ -12,9 +12,12 @@ export default function SearchBar({ width, size, boxShadow=true, style }) {
   const [rollNo, setRollNo] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isLoading } = useSelector(store => store.results );
   async function handleSearch(e) {
       e.preventDefault();
+      dispatch(startLoading());
       const student = await getResults(rollNo);
+      dispatch(stopLoading());
       if (student) {
         dispatch(setStudent(student));
         navigate(`/results/all/${student.rollNo}`);
