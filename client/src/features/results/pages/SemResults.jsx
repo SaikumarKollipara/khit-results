@@ -42,7 +42,7 @@ export default function SemResults() {
         </Heading>
         <p className='heading'>
           <div className="name">Subjects</div>
-          <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Print</Button>
+          <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Save as PDF</Button>
         </p>
         <p className="header">
           <span className='code'>Code</span>
@@ -110,6 +110,7 @@ const FirstSection = styled.div`
     align-items: center;
     font-weight: var(--font-weight4);
     padding: 10px 0;
+    padding-right: 30px;
     text-align: center;
     .code{ flex: 1 }
     .name{ flex: 2 }
@@ -149,9 +150,9 @@ const Subjects = styled.div`
   width: 100%;
   height: 56vh;
   overflow: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  &::-webkit-scrollbar { /* Chrome */
+  /* -ms-overflow-style: none;  
+  scrollbar-width: none; 
+  &::-webkit-scrollbar { 
     display: none;
-  }
+  } */
 `

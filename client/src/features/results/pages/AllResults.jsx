@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -12,15 +12,19 @@ import Container from '../components/Container';
 import Graph from '../components/Graph';
 import CircularProgress from '../components/CircularProgress';
 import { getPercentage } from '../../../utils/helpers';
+import Button from '../../../components/Button';
+import { useReactToPrint } from 'react-to-print';
 
 export default function AllResults() {
   const { student } = useSelector( store => store.results );
   const semesters = getSemestersData(student);
+  const printComponentRef = useRef();
   if(Object.keys(student).length === 0) {
     toast.warning('Search using Roll No');
     return <Navigate to={'/'}/>;
   };
   // toast.success(`Results of ${student.rollNo.toUpperCase()}`);
+  const handlePrint = useReactToPrint({ content: () => printComponentRef.current });
   return (
     <Layout>
       <FirstSection>
@@ -32,8 +36,11 @@ export default function AllResults() {
           <WavingHand src='/assets/images/waving-hand.png' />
         </Heading>
         <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
-        <Semesters>
-          <p className='heading'>Semesters</p>
+        <Semesters ref={printComponentRef} >
+          <p className='heading'>
+            <div className="name">Semesters</div>
+            <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Save as PDF</Button>
+          </p>
           {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
         </Semesters>
       </FirstSection>
@@ -63,9 +70,14 @@ export default function AllResults() {
 
 const FirstSection = styled.div`
   .heading {
-    font-size: var(--font-size3);
-    font-weight: var(--font-weight4);
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .name {
+      font-size: var(--font-size3);
+      font-weight: var(--font-weight4);
+      margin-bottom: 10px;
+    }
   }
 `
 const SecondSection = styled.div`
@@ -109,9 +121,9 @@ const Semesters = styled.div`
   width: 100%;
   height: 64.5vh;
   overflow: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  &::-webkit-scrollbar { /* Chrome */
+  /* -ms-overflow-style: none;
+  scrollbar-width: none; 
+  &::-webkit-scrollbar { 
     display: none;
-  }
+  } */
 `
