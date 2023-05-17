@@ -53,15 +53,15 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 20px;
+  width: 25px;
 }
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
+  background-color: #a8bbbf6c;
   border-radius: 50px;
-  border: 6px solid transparent;
+  border: 10px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {

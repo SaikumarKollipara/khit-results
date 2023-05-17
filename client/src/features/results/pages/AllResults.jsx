@@ -36,11 +36,11 @@ export default function AllResults() {
           <WavingHand src='/assets/images/waving-hand.png' />
         </Heading>
         <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
+        <p className='heading'>
+          <div className="name">Semesters</div>
+          <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Save as PDF</Button>
+        </p>
         <Semesters ref={printComponentRef} >
-          <p className='heading'>
-            <div className="name">Semesters</div>
-            <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Save as PDF</Button>
-          </p>
           {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
         </Semesters>
       </FirstSection>
@@ -119,7 +119,7 @@ const RollNo = styled.p`
 `
 const Semesters = styled.div`
   width: 100%;
-  height: 64.5vh;
+  height: 60vh;
   overflow: scroll;
   /* -ms-overflow-style: none;
   scrollbar-width: none; 
