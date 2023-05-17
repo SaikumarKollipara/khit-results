@@ -17,11 +17,11 @@ export default function SearchBar({ width, size, boxShadow=true, style }) {
       e.preventDefault();
       dispatch(startLoading());
       const student = await getResults(rollNo);
-      dispatch(stopLoading());
       if (student) {
         dispatch(setStudent(student));
         navigate(`/results/all/${student.rollNo}`);
       }
+      dispatch(stopLoading());
   }
   return (
     <Wrapper style={style} onSubmit={handleSearch} width={width} size={size} boxShadow={boxShadow}>
