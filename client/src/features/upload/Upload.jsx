@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import { BACKEND_URL } from '../../data/constants';
 
 export default function Upload() {
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ export default function Upload() {
       form.append('examDate', formData.examDate)
       form.append('file', formData.resultsFile)
       setLoading(true)
-      const res = await axios.post(`${VITE_BACKEND_URL}/api/v1/results/upload`, form);
+      const res = await axios.post(`${BACKEND_URL}/api/v1/results/upload`, form);
       setLoading(false)
       console.log(res.data);
     } catch (err) {

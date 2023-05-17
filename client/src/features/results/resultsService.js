@@ -7,6 +7,7 @@ import { BACKEND_URL } from '../../data/constants';
 const URL = `${BACKEND_URL}/api/v1/results/`;
 
 export async function getResults(rollNo) {
+  rollNo = rollNo.toLowerCase();
   try {
     const { data } = await axios.get(URL+rollNo);
     return data.student;
