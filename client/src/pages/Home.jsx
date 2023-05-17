@@ -3,13 +3,12 @@ import styled from 'styled-components';
 
 import Button from '../components/Button';
 import SearchBar from '../components/SearchBar';
-import Loading from '../components/Loading';
 
 export default function Home() {
   return (
     <Wrapper>
       <Header>
-        <Logo>KHIT</Logo>
+        <Logo src='/assets/images/logo.png' />
         <Links>
           <span className="register">Register</span>
           <span className="or">or</span>
@@ -49,9 +48,10 @@ const Header = styled.div`
   top: 0;
   left: 0; */
 `
-const Logo = styled.span` 
-  font-size: 2rem;
-  font-weight: var(--font-weight4);
+const Logo = styled.img` 
+  /* font-size: 2rem;
+  font-weight: var(--font-weight4); */
+  width: 4rem;
 `
 const Links = styled.div`
   display: flex;
