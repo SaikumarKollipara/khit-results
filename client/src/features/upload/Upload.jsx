@@ -39,7 +39,8 @@ export default function Upload() {
   console.log(formData)
   return <>
     <form onSubmit={handleSubmit}>
-    <select onChange={(e) => setFormData(prev => {return {...prev, sem: e.target.value}})} name='sem'>
+    <select required onChange={(e) => setFormData(prev => {return {...prev, sem: e.target.value}})} name='sem'>
+        <option value=''>Select sem</option>
         <option value='1'>1</option>
         <option value='2'>2</option>
         <option value='3'>3</option>
@@ -54,16 +55,17 @@ export default function Upload() {
       r16: <input onChange={handleRegulation} name='regulation' type='checkbox' value='r16' />
       <br />
 
-      <select onChange={(e) => setFormData(prev => {return {...prev, examType: e.target.value}})} name='exam-type'>
+      <select required onChange={(e) => setFormData(prev => {return {...prev, examType: e.target.value}})} name='exam-type'>
+        <option value=''>Select exam type</option>
         <option value='regular'>Regular</option>
         <option value='supply'>supply</option>
         <option value='regular and supply'>regular and supply</option>
         <option value='revaluation'>revaluation</option>
       </select><br />
 
-      Date: <input onChange={(e)=>setFormData(prev => {return {...prev, examDate: new Date(e.target.value)}})} type='month' />
+      Date: <input required onChange={(e)=>setFormData(prev => {return {...prev, examDate: new Date(e.target.value)}})} type='month' />
 
-      File: <input onChange={(e)=>setFormData(prev => {return {...prev, resultsFile: e.target.files[0]}})} type='file' />
+      File: <input required onChange={(e)=>setFormData(prev => {return {...prev, resultsFile: e.target.files[0]}})} type='file' accept='.xlsx' />
 
       <input type="submit" />
     </form>
