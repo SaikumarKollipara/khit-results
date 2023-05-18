@@ -45,7 +45,7 @@ export async function uploadResults(req, res, next) {
       }
       await calculateFinalResult(student);
     }
-    
+    console.log('Results uploaded successfully');
     return res.status(200).json({ success: true, message: 'Results uploaded successfully' });
 
     // Delete uploaded file
