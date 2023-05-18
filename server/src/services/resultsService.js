@@ -156,14 +156,13 @@ function isAlreadyExisted(newExam, sem) {
   existedExams.push([...sem.supply]);
   existedExams.push([...sem.revaluation]);
   for (const existedExam of existedExams) {
-    if (existedExam.date === newExam.date) return true;
+    if (existedExam?.examDate === newExam.examDate) return true;
   }
   return false;
 }
 
 export async function calculateFinalResult(student) {
   let backlogs = [];
-  return;
   const sems = student.sems;
   for (let sem=1; sem <= 8; sem++) {
     backlogs = [...backlogs, ...sems[sem].final.backlogs];
@@ -252,6 +251,7 @@ async function findRegulationAndBranch (rollNo, availableRegulations) {
 }
 
 function findExamType (regulation, availableRegulations) {
+  console.log(availableRegulations)
   if (availableRegulations.at(-1) === regulation) return 'regular';
   return 'supply';
 }
