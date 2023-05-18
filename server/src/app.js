@@ -10,8 +10,9 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: ['http://localhost:5173', config.FRONTEND_URL]
+  origin: config.FRONTEND_URL
 }));
+console.log(config.FRONTEND_URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
