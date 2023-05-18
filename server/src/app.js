@@ -9,9 +9,7 @@ import config from './config/config.js';
 const app = express();
 
 // Middlewares
-app.use(cors({
-  origin: '*',
-}));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
