@@ -51,8 +51,8 @@ export default function Upload() {
         <option value='8'>8</option>
       </select><br />
 
-      r16: <input onChange={handleRegulation} name='regulation' type='checkbox' value='r16' />
       r19: <input onChange={handleRegulation} name='regulation' type='checkbox' value='r19' />
+      r16: <input onChange={handleRegulation} name='regulation' type='checkbox' value='r16' />
       <br />
 
       <select required onChange={(e) => setFormData(prev => {return {...prev, examType: e.target.value}})} name='exam-type'>

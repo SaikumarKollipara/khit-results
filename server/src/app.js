@@ -9,12 +9,11 @@ import config from './config/config.js';
 const app = express();
 
 // Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: '*',
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
 }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 // Route handlers

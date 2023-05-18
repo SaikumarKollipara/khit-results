@@ -24,6 +24,7 @@ export async function uploadResults(req, res, next) {
 
     const uploadedFilePath = getAbsolutePath(import.meta.url, '../uploads/results.xlsx');
     const resultsData = processAndGetJSON(uploadedFilePath); ///////////validation for resultsData required
+    throw new AppError('returning after testing')
     // const resultsData = { //For testing
     //   "168x1a0102":  [
     //     {
