@@ -9,7 +9,7 @@ const URL = `${BACKEND_URL}/api/v1/results/`;
 export async function getResults(rollNo) {
   rollNo = rollNo.toLowerCase();
   try {
-    const { data } = await axios.get(URL+rollNo);
+    const { data } = await axios.get(URL+rollNo, {withCredentials: true});
     return data.student;
   } catch(err) {
     let message = 'Something went wrong';
