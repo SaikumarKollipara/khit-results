@@ -252,7 +252,7 @@ async function findRegulationAndBranch (rollNo, availableRegulations) {
 
 function findExamType (regulation, availableRegulations) {
   console.log(availableRegulations)
-  if (availableRegulations.at(-1) === regulation) return 'regular';
+  if (availableRegulations[availableRegulations.length-1] === regulation) return 'regular';
   return 'supply';
 }
 
