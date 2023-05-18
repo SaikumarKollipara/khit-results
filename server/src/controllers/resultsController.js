@@ -9,7 +9,6 @@ import mongoose from 'mongoose';
 
 export async function uploadResults(req, res, next) {
   try {
-    throw new AppError('returning after testing')
     let { examType, sem, availableRegulations, examDate } = req.body;
     availableRegulations = availableRegulations.split(',');
     // let examType = 'regular and supply', sem = '2', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
