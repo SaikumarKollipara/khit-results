@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 
 export async function uploadResults(req, res, next) {
   try {
+    throw new AppError('returning after testing')
     let { examType, sem, availableRegulations, examDate } = req.body;
     availableRegulations = availableRegulations.split(',');
     // let examType = 'regular and supply', sem = '2', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
@@ -24,7 +25,6 @@ export async function uploadResults(req, res, next) {
 
     const uploadedFilePath = getAbsolutePath(import.meta.url, '../uploads/results.xlsx');
     const resultsData = processAndGetJSON(uploadedFilePath); ///////////validation for resultsData required
-    throw new AppError('returning after testing')
     // const resultsData = { //For testing
     //   "168x1a0102":  [
     //     {
