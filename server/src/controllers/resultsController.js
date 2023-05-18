@@ -9,14 +9,15 @@ import mongoose from 'mongoose';
 
 export async function uploadResults(req, res, next) {
   try {
-    let { examType, sem, availableRegulations, examDate } = req.body; ///////////regular, supply, regular and supply, revaluation
+    let { examType, sem, availableRegulations, examDate } = req.body;
     availableRegulations = availableRegulations.split(',');
     // let examType = 'regular and supply', sem = '2', availableRegulations = ['r19', 'r16'], examDate = new Date(2, 2022);
     // return res.status(200).send( [examType, sem, availableRegulations, examDate] )
+    
     let regulationData = await Regulation.find().select('name -_id');
     regulationData = regulationData.map( reg => reg.name );
     for ( const regulation of availableRegulations ) {
-      if (!(regulationData.includes(regulation))) throw new AppError(`${regulation} is not available`)
+      if (!(regulationData.includes(regulation))) throw new AppError(`Regulation ${regulation} is not available`)
     }
     //Process the input data
     availableRegulations = availableRegulations.map( regulation => regulation.toLowerCase() ).sort();

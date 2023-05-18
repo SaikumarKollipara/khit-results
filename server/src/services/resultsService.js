@@ -1,10 +1,14 @@
 import excelToJson from 'convert-excel-to-json';
+
 import Student from '../models/student.js';
 import Regulation from '../models/regulation.js';
+import { AppError } from '../middlewares/errorMiddleware.js';
 
 
 // ----------------------------------------------uploadResults---------------------------------------------------------------- 
 export function processAndGetJSON(path) {
+  if (Object.keys(excelToJson({ sourceFile: path })['Table 1'][0]).length !== 5) 
+    throw new AppError('The columns should be in the format of RollNo, SubCode, SubName, Grade, Credits', 400)
   let data = excelToJson({ 
     sourceFile: path,
     columnToKey: {
@@ -60,6 +64,7 @@ async function saveStudent(student, examType, sem, examDate, resultsData) {
     examDate: new Date(examDate),
     results: resultsData
   }
+  if (isAlreadyExisted(exam, student.sems[sem])) throw new AppError('This data already exists in the database');
   if (examType === 'regular') {
     student.sems[sem].regular = exam;
   } else if (examType === 'supply') {
@@ -67,7 +72,6 @@ async function saveStudent(student, examType, sem, examDate, resultsData) {
   } else if (examType === 'revaluation') {
     student.sems[sem].revaluation.push(exam);
   }
-  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%resultsdata', resultsData);
   // Update regular results with supply and revaluation and save it in final
   if (student.sems[sem].regular) {
     const regularResults = student.sems[sem].regular.results;
@@ -146,8 +150,20 @@ async function calculateSGPA(student, semNumber) {
   return SGPA;
 }
 
+function isAlreadyExisted(newExam, sem) {
+  const existedExams = [];
+  existedExams.push(sem.regular);
+  existedExams.push([...sem.supply]);
+  existedExams.push([...sem.revaluation]);
+  for (const existedExam of existedExams) {
+    if (existedExam.date === newExam.date) return true;
+  }
+  return false;
+}
+
 export async function calculateFinalResult(student) {
   let backlogs = [];
+  return;
   const sems = student.sems;
   for (let sem=1; sem <= 8; sem++) {
     backlogs = [...backlogs, ...sems[sem].final.backlogs];

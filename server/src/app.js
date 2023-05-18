@@ -4,11 +4,14 @@ import cors from 'cors';
 import resultsRouter from './routes/resultsRouter.js';
 import regulationRouter from './routes/regulationRouter.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
+import config from './config/config.js';
 
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', config.FRONTEND_URL]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -15,7 +15,8 @@ const config = {
   PORT: process.env.PORT || 5000,
   APP_ENV: process.env.APP_ENV || "production",
   DB_URI: process.env.DB_URI,
-  DB_NAME: process.env.DB_NAME
+  DB_NAME: process.env.DB_NAME,
+  FRONTEND_URL: process.env.FRONTEND_URL
 };
 
 export default config;
