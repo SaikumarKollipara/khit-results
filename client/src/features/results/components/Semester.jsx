@@ -46,7 +46,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   background-color: var(--white2);
-  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 0 10px;
   border-radius: var(--border-radius3);
 `

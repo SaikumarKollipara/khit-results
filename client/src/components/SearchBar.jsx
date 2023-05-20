@@ -44,6 +44,7 @@ const Wrapper = styled.form`
     width: 100%;
     padding: 13px 4rem; 
     padding-left: 5rem;
+    padding-right: 1rem;
     background-color: transparent;
     outline: none;
     border: none;

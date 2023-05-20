@@ -18,7 +18,7 @@ export default function Loading() {
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: var(--blue2);
   position: fixed;
   top: 0;

@@ -37,7 +37,7 @@ export default function Home() {
 
 const Header = styled.div`
   width: 100%;
-  margin-top: 2.5rem;
+  /* margin-top: 2rem; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -92,8 +92,9 @@ const Image = styled.img`
 `
 const Wrapper = styled.div`
   height: 100vh;
-  width: 100vw;
-  padding: 0 13%;
+  width: 100%;
+  overflow: hidden;
+  padding: 2rem 13%;
   background-image: linear-gradient(to bottom left, var(--blue1), var(--white2));
   display: flex;
   flex-direction: column;
@@ -102,13 +103,6 @@ const Wrapper = styled.div`
   }
 
   @media screen and (max-width: 1025px) {
-    padding: 20px;
-    && ${Header} {
-      margin-top: 0;
-    }
-    && ${Logo} {
-      width: 3rem;
-    }
     && ${ContentContainer} {
       flex-direction: column;
       justify-content: center;
@@ -125,11 +119,18 @@ const Wrapper = styled.div`
       opacity: 0.4;
     }
     .searchBar {
-      width: 30rem;
+      width: 25rem;
       margin: 0 auto;
     }
   }
   @media screen and (max-width: 501px) {
+    padding: 20px;
+    && ${Header} {
+      margin-top: 0;
+    }
+    && ${Logo} {
+      width: 3rem;
+    }
     && ${Image} {
       position: absolute;
       width: 105%;

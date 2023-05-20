@@ -2,9 +2,9 @@ import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useMediaQuery } from 'react-responsive';
 
-import Layout from '../components/Layout';
-import Heading from '../components/Heading';
+import LargeScreenLayout from '../components/LargeScreenLayout';
 import { Navigate } from 'react-router-dom';
 import { getSemestersData } from '../../../utils/helpers';
 import Semester from '../components/Semester';
@@ -14,6 +14,11 @@ import CircularProgress from '../components/CircularProgress';
 import { getPercentage } from '../../../utils/helpers';
 import Button from '../../../components/Button';
 import { useReactToPrint } from 'react-to-print';
+import Heading from '../components/Heading';
+import MediumScreenLayout from '../components/MediumScreenLayout';
+import { ProgressTile, TextTile } from '../components/Tiles';
+import { GreetingTile } from '../components/HeaderTiles';
+import NavBar from '../components/NavBar';
 
 export default function AllResults() {
   const { student } = useSelector( store => store.results );
@@ -23,107 +28,75 @@ export default function AllResults() {
     toast.warning('Search using Roll No');
     return <Navigate to={'/'}/>;
   };
-  // toast.success(`Results of ${student.rollNo.toUpperCase()}`);
-  const handlePrint = useReactToPrint({ content: () => printComponentRef.current });
+  const isLargeScreen = useMediaQuery({ minWidth: 1151 });
+  const isMediumScreen = useMediaQuery({ maxWidth: 1150 });
+  const isSmallScreen = useMediaQuery({ maxWidth: 600 });
   return (
-    <Layout>
-      <FirstSection>
-        <Heading>
-          <div className='content'>
-            <Greeting>Hello There!</Greeting>
-            <Description>It's good to see you again.</Description>
+    <>
+      {isLargeScreen &&     
+        <LargeScreenLayout>
+          <GreetingTile />
+          <div className="semesters-header">
+            <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
+            <Heading text={'Semesters'} printComponentRef={printComponentRef} />
           </div>
-          <WavingHand src='/assets/images/waving-hand.png' />
-        </Heading>
-        <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
-        <p className='heading'>
-          <div className="name">Semesters</div>
-          <Button onClick={handlePrint} style={{padding: '8px 20px'}} size={"var(--font-size1)"} >Save as PDF</Button>
-        </p>
-        <Semesters ref={printComponentRef} >
-          {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
-        </Semesters>
-      </FirstSection>
-      <SecondSection className="second-section">
-        <p className='heading'>Overview</p>
-        <Container>
-          <p className="content">{student.regulation.toUpperCase()}</p>
-          <p className="title">{student.branch}</p>
-        </Container>
-        <Container>
-          <a className="content">{student.finalResult.backlogs.length}</a>
-          <a className='title' style={{textDecoration: 'underline', cursor: 'pointer'}}>Total backlogs</a>
-        </Container>
-        <Container style={{padding: 0}}>
-          <CircularProgress number={student.finalResult.cgpa.toFixed(2)} type={'gpa'} />
-          <p className='title' href="">Total CGPA</p>
-        </Container>
-        <Container>
-          <CircularProgress number={getPercentage(student.finalResult.cgpa).toFixed(2)} type={'percentage'} />
-          <p className='title' href="">Total percentage</p>
-        </Container>
-        <div id="graph"><Container><Graph /></Container></div>
-      </SecondSection>
-    </Layout>
+          <SemestersContainer ref={printComponentRef} >
+            {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
+          </SemestersContainer>
+          <NavBar />
+          <Heading text={'Overview'}/>
+          <Overview />
+        </LargeScreenLayout>
+      }
+      {isMediumScreen && 
+        <MediumScreenLayout>
+          <NavBar />
+          <GreetingTile />
+          <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
+          <Heading text={'Overview'}/>
+          <Overview />
+          <Heading text={'Semesters'} printComponentRef={printComponentRef} />
+          <SemestersContainer ref={printComponentRef} >
+            {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
+          </SemestersContainer>
+        </MediumScreenLayout>
+      }
+
+    </>
+
   )
 }
 
-const FirstSection = styled.div`
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .name {
-      font-size: var(--font-size3);
-      font-weight: var(--font-weight4);
-      margin-bottom: 10px;
-    }
-  }
-`
-const SecondSection = styled.div`
+
+function Overview() {
+  const { student } = useSelector( store => store.results );
+  return <>
+    <GridContainer >
+      <TextTile title={student.regulation.toUpperCase()} description={student.branch} />
+      <TextTile title={student.finalResult.backlogs.length} description={'Total Backlogs'} />
+      <ProgressTile progress={student.finalResult.cgpa} text={'Total GPA'} type={'gpa'} />
+      <ProgressTile progress={getPercentage(student.finalResult.cgpa)} text={'Total Percentage'} type={'percentage'} />
+      <div id='graph'><Graph /></div>
+    </GridContainer>
+  </>
+}
+
+const GridContainer = styled.div`
   display: grid;
+  grid-template-columns: calc(50% - 10px) calc(50% - 10px);
+  grid-template-rows: 115px 115px auto;
   gap: 20px;
-  grid-template-columns: 47% 47%;
-  grid-template-rows: var(--font-size4) 115px 115px auto;
-  justify-content: center;
-  .heading {
-    grid-column: 1 / -1;
-    font-size: var(--font-size3);
-    font-weight: var(--font-weight4);
-    align-self: center;
-  }
   #graph {
     grid-column: 1 / -1;
   }
-  .content {
-    font-size: var(--font-size4);
-    font-weight: var(--font-weight4);
-  }
-`
-const Greeting = styled.p`
-  font-size: var(--font-size4);
-  font-weight: var(--font-weight4);
-`
-const Description = styled.p`
-  font-size: var(--font-size2);
-  font-weight: var(--font-weight3);
-`
-const WavingHand = styled.img`
-  width: 95px;
 `
 const RollNo = styled.p`
   font-size: var(--font-size1);
   font-weight: var(--font-weight4);
-  margin-top: 50px;
   color: var(--black2);
 `
-const Semesters = styled.div`
+const SemestersContainer = styled.div`
   width: 100%;
-  height: 60vh;
-  overflow: scroll;
-  /* -ms-overflow-style: none;
-  scrollbar-width: none; 
-  &::-webkit-scrollbar { 
-    display: none;
-  } */
+  display: flex;
+  flex-direction: column;
 `
