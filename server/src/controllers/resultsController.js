@@ -38,14 +38,20 @@ export async function uploadResults(req, res, next) {
     for (const rollNo in resultsData) {
       const existedStudent = await Student.findOne({ rollNo });
       let student = null;
-      if (!existedStudent) {
-        student = await createStudent(rollNo, examType, sem, availableRegulations, examDate, resultsData[rollNo]);
-      } else {
-        student = await updateStudent(existedStudent, examType, sem, availableRegulations, examDate, resultsData[rollNo]);
+      try {
+        if (!existedStudent) {
+          student = await createStudent(rollNo, examType, sem, availableRegulations, examDate, resultsData[rollNo]);
+        } else {
+          student = await updateStudent(existedStudent, examType, sem, availableRegulations, examDate, resultsData[rollNo]);
+        }
+      } catch (err) {
+        if (err.message === 'This data already exists in the database'){
+          console.log('This data already exists in the database')
+          continue;
+        }
       }
       await calculateFinalResult(student);
     }
-    console.log('Results uploaded successfully');
     return res.status(200).json({ success: true, message: 'Results uploaded successfully' });
 
     // Delete uploaded file

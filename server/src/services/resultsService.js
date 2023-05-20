@@ -7,7 +7,7 @@ import { AppError } from '../middlewares/errorMiddleware.js';
 
 // ----------------------------------------------uploadResults---------------------------------------------------------------- 
 export function processAndGetJSON(path) {
-  if (Object.keys(excelToJson({ sourceFile: path })['Table 1'][0]).length !== 5) 
+  if (Object.keys(excelToJson({ sourceFile: path })['Table 1'][1]).length !== 5) 
     throw new AppError('The columns should be in the format of RollNo, SubCode, SubName, Grade, Credits', 400)
   let data = excelToJson({ 
     sourceFile: path,
@@ -64,7 +64,7 @@ async function saveStudent(student, examType, sem, examDate, resultsData) {
     examDate: new Date(examDate),
     results: resultsData
   }
-  if (isAlreadyExisted(exam, student.sems[sem])) throw new AppError('This data already exists in the database');
+  if (isAlreadyExisted(exam, student.sems[sem], examType)) throw new AppError('This data already exists in the database', 400);
   if (examType === 'regular') {
     student.sems[sem].regular = exam;
   } else if (examType === 'supply') {
@@ -109,7 +109,7 @@ async function saveStudent(student, examType, sem, examDate, resultsData) {
 async function calculateSGPA(student, semNumber) {
   const havingBacklogs = student.sems[semNumber].final.backlogs.length !== 0;
   const regulationData = await Regulation.findOne({ name: student.regulation });
-    const GRADE_POINTS_MAP = {};
+  const GRADE_POINTS_MAP = {};
   const sem = regulationData.branches.find( branch => branch.name === student.branch ).sems[semNumber];
   let SGPA = 0, sumOfGxC = 0, totalCredits = 0;
 
@@ -144,22 +144,35 @@ async function calculateSGPA(student, semNumber) {
   // }
   student.sems[semNumber].final.results.forEach( result => {
     sumOfGxC += GRADE_POINTS_MAP[result.grade] * result.credits
-    console.log(result.grade)
   })
   SGPA = sumOfGxC / totalCredits;
   return SGPA;
 }
 
-function isAlreadyExisted(newExam, sem) {
+function isAlreadyExisted(newExam, sem, examType) {
+  // const existedExams = [];
+  // existedExams.push(sem.regular);
+  // existedExams.push(...sem.supply);
+  // existedExams.push(...sem.revaluation);
   const existedExams = [];
-  existedExams.push(sem.regular);
-  existedExams.push([...sem.supply]);
-  existedExams.push([...sem.revaluation]);
+  if (examType === 'regular') existedExams.push(sem.regular);
+  else if (examType === 'supply') existedExams.push(...sem.supply);
+  else if (examType === 'revaluation') existedExams.push(...sem.revaluation);
   for (const existedExam of existedExams) {
-    if (existedExam?.examDate === newExam.examDate) return true;
+    if (existedExam?.examDate.getTime() === newExam.examDate.getTime()){
+      return true;
+    }
   }
   return false;
 }
+// function isAlreadyExisted(newExam, existedExams) {
+//   for (const existedExam of existedExams) {
+//     if (existedExam?.examDate.getTime() === newExam.examDate.getTime()){
+//       return true;
+//     }
+//   }
+//   return false;
+// }
 
 export async function calculateFinalResult(student) {
   let backlogs = [];
@@ -243,6 +256,7 @@ async function findRegulationAndBranch (rollNo, availableRegulations) {
       break;
     }
   }
+  if (!regulation) throw new AppError(`${rollNo} is not in available regulations ${availableRegulations}`);
   const regulationData = await Regulation.findOne({ name: regulation });
   const branch_map = {};
   regulationData.branches.forEach( branch => branch_map[branch.code] = branch.name )
