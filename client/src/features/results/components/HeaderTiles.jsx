@@ -17,17 +17,6 @@ export function SemesterTile() {
   
 }
 
-const Wrapper = styled.div`
-  width: 100%;
-  min-height: 150px;
-  border-radius: var(--border-radius3);
-  background-color: var(--white2);
-  display: flex;
-  justify-content: center;
-  gap: 9rem;
-  align-items: center;
-`
-
 const GreetingText = styled.p`
   font-size: var(--font-size4);
   font-weight: var(--font-weight4);
@@ -39,4 +28,19 @@ const Description = styled.p`
 const WavingHand = styled.img`
   width: 95px;
 `
-
+const Wrapper = styled.div`
+  width: 100%;
+  min-height: 150px;
+  border-radius: var(--border-radius3);
+  background-color: var(--white2);
+  display: flex;
+  justify-content: center;
+  gap: 9rem;
+  align-items: center;
+  @media (max-width: 600px) {
+    gap: 1rem;
+    && ${WavingHand} {
+      width: 4rem;
+    }
+  }
+`

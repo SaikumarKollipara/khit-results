@@ -4,16 +4,17 @@ import CircularProgress from './CircularProgress';
 import Container from './Container';
 
 export function TextTile({ title, description }) {
+  const isBacklog = description.toLowerCase().includes('backlogs');
   return <Wrapper>
-    <p className="content">{title}</p>
-    <p className="title">{description}</p>
+    <p className="title">{title}</p>
+    <p style={{ textDecoration: isBacklog ? 'Underline' : 'none'}} className="description">{description}</p>
   </Wrapper>
 }
 
 export function ProgressTile({ progress, text, type }) {
   return <Wrapper>
     <CircularProgress number={progress.toFixed(2)} type={type} />
-    <p>{text}</p>
+    <p className='description progress' >{text}</p>
   </Wrapper>
 }
 
@@ -26,4 +27,12 @@ const Wrapper = styled.div`
   justify-content: center;
   gap: 10px;
   border-radius: var(--border-radius1 );
+  .title {
+    font-size: calc(var(--font-size4) + 4px);
+    font-weight: var(--font-weight4);
+    text-decoration: ${props => props.isUnderline ? 'underline' : 'none'};
+  }
+  .description {
+    font-size: var(--font-size1);
+  }
 `

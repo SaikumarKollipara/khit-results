@@ -4,7 +4,6 @@ import { BiBell, BiUserCircle } from 'react-icons/bi';
 import SearchBar from '../../../components/SearchBar'
 
 export default function LargeScreenLayout({ children=['', ''] }) {
-  console.log(children[1])
   return (
     <Wrapper>
       <FirstSection>

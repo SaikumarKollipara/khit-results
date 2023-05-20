@@ -2,11 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { FaArrowRight } from 'react-icons/fa';
 
 import Button from '../../../components/Button';
 
 export default function Semester({ semester }) {
-  const { student } = useSelector(store => store.results );
+  const { student, screenType } = useSelector(store => store.results );
   const navigate = useNavigate();
   return (
     <Wrapper>
@@ -27,7 +28,15 @@ export default function Semester({ semester }) {
             <p className="subscript">&nbsp;Backlogs</p>
           </Content>
         </ContentWrapper>
-        <Button onClick={()=>navigate(`/results/${semester.number}/${student.rollNo}`)} size={'var(--font-size1)'}>View Details</Button>
+        {screenType === 'small' ?
+          <Button style={{padding: '8px 12px'}} onClick={()=>navigate(`/results/${semester.number}/${student.rollNo}`)} size={'var(--font-size1)'}>
+            {screenType === 'small' ? <FaArrowRight /> : 'View Details'}
+          </Button>
+          :
+          <Button onClick={()=>navigate(`/results/${semester.number}/${student.rollNo}`)} size={'var(--font-size1)'}>
+            View Details
+          </Button>
+        }
         </>
         :
         <ContentWrapper>
@@ -74,12 +83,13 @@ const Content = styled.div`
   align-items: flex-end;
   font-weight: var(--font-weight4);
   .number{
-    font-size: var(--font-size3);
+    font-size: var(--font-size2);
+    font-weight: var(--font-weight5);
   }
   .subscript{
-    font-weight: var(--font-weight3);
     font-size: var(--font-size1);
-    margin-bottom: 5px;
+    font-weight: var(--font-weight3);
+    margin-bottom: 1px;
   }
   .not-available{
     font-size: var(--font-size3);

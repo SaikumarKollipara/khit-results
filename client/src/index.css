@@ -51,7 +51,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 25px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background-color: transparent;
@@ -59,7 +59,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: #a8bbbf6c;
   border-radius: 50px;
-  border: 10px solid transparent;
+  /* border: 10px solid transparent; */
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -71,6 +71,12 @@ body {
 
 a {
   color: var(--black1);
+}
+button {
+  background-color: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
 }
 
 @media (max-width: 426px) {

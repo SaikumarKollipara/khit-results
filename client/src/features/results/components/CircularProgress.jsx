@@ -63,4 +63,7 @@ const Wrapper = styled.div`
     transform: translate(-50%, -50%);
     font-weight: var(--font-weight4);
   }
+  @media (max-width: 600px) {
+    width: 80px;
+  }
 `

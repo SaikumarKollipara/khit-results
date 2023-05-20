@@ -3,7 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   student: {},
   isLoading: false,
-  currentSemester: {}
+  currentSemester: {},
+  screenType: '',
+  activeTab: 'overview'
 };
 
 export const resultsSlice = createSlice({
@@ -14,8 +16,17 @@ export const resultsSlice = createSlice({
     startLoading: (state) => { state.isLoading = true },
     stopLoading: (state) => { state.isLoading = false },
     setCurrentSemester: (state, action) => { state.currentSemester = action.payload },
+    setScreenType: (state, action) => { state.screenType = action.payload },
+    setActiveTab: (state, action) => { state.activeTab = action.payload },
   }
 });
 
 export default resultsSlice.reducer;
-export const { setStudent, startLoading, stopLoading, setCurrentSemester } = resultsSlice.actions;
+export const { 
+  setStudent, 
+  startLoading, 
+  stopLoading, 
+  setCurrentSemester,
+  setScreenType,
+  setActiveTab
+} = resultsSlice.actions;

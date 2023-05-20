@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useMediaQuery } from 'react-responsive';
 
@@ -19,18 +19,24 @@ import MediumScreenLayout from '../components/MediumScreenLayout';
 import { ProgressTile, TextTile } from '../components/Tiles';
 import { GreetingTile } from '../components/HeaderTiles';
 import NavBar from '../components/NavBar';
+import SmallScreenLayout from '../components/SmallScreenLayout';
+import { setActiveTab, setScreenType } from '../resultsSlice';
 
 export default function AllResults() {
-  const { student } = useSelector( store => store.results );
-  const semesters = getSemestersData(student);
-  const printComponentRef = useRef();
+  const { student, activeTab } = useSelector( store => store.results );
   if(Object.keys(student).length === 0) {
     toast.warning('Search using Roll No');
     return <Navigate to={'/'}/>;
   };
+  const dispatch = useDispatch();
+  const semesters = getSemestersData(student);
+  const printComponentRef = useRef();
   const isLargeScreen = useMediaQuery({ minWidth: 1151 });
-  const isMediumScreen = useMediaQuery({ maxWidth: 1150 });
+  const isMediumScreen = useMediaQuery({ minWidth: 601, maxWidth: 1150 });
   const isSmallScreen = useMediaQuery({ maxWidth: 600 });
+  if (isLargeScreen) dispatch(setScreenType('large'));
+  else if (isMediumScreen) dispatch(setScreenType('medium'));
+  else if (isSmallScreen) dispatch(setScreenType('small'));
   return (
     <>
       {isLargeScreen &&     
@@ -61,7 +67,31 @@ export default function AllResults() {
           </SemestersContainer>
         </MediumScreenLayout>
       }
-
+      {isSmallScreen && 
+        <SmallScreenLayout>
+          <NavBar />
+          <GreetingTile />
+          <RollNo style={{textAlign: 'center'}} >Results of {student.rollNo.toUpperCase()}</RollNo>
+          <Buttons className="buttons">
+            <Button 
+              onClick={()=>dispatch(setActiveTab('overview'))}
+              isActive={activeTab === 'overview'} 
+              size={'var(--font-size1)'} 
+            >Overview</Button>
+            <Button 
+              onClick={()=>dispatch(setActiveTab('semesters'))}
+              isActive={activeTab === 'semesters'} 
+              size={'var(--font-size1)'} 
+            >Semesters</Button>
+          </Buttons>
+          {activeTab === 'overview' && <Overview />}
+          {activeTab === 'semesters' && 
+            <SemestersContainer ref={printComponentRef} >
+              {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
+            </SemestersContainer>
+          }
+        </SmallScreenLayout>
+      }
     </>
 
   )
@@ -89,6 +119,9 @@ const GridContainer = styled.div`
   #graph {
     grid-column: 1 / -1;
   }
+  @media (max-width: 600px) {
+    gap: 1rem;
+  }
 `
 const RollNo = styled.p`
   font-size: var(--font-size1);
@@ -99,4 +132,9 @@ const SemestersContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+`
+const Buttons = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 `
