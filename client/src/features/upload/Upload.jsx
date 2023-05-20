@@ -25,6 +25,7 @@ export default function Upload() {
       setLoading(false)
       console.log(res.data);
     } catch (err) {
+      //refresh page when upload file changed
       console.log(err.response.data)
       setLoading(false)
     }
@@ -41,14 +42,14 @@ export default function Upload() {
     <form onSubmit={handleSubmit}>
     <select required onChange={(e) => setFormData(prev => {return {...prev, sem: e.target.value}})} name='sem'>
         <option value=''>Select sem</option>
-        <option value='1'>1</option>
-        <option value='2'>2</option>
-        <option value='3'>3</option>
-        <option value='4'>4</option>
-        <option value='5'>5</option>
-        <option value='6'>6</option>
-        <option value='7'>7</option>
-        <option value='8'>8</option>
+        <option value='1'>1-1</option>
+        <option value='2'>1-2</option>
+        <option value='3'>2-1</option>
+        <option value='4'>2-2</option>
+        <option value='5'>3-1</option>
+        <option value='6'>3-2</option>
+        <option value='7'>4-1</option>
+        <option value='8'>4-2</option>
       </select><br />
 
       r19: <input onChange={handleRegulation} name='regulation' type='checkbox' value='r19' />

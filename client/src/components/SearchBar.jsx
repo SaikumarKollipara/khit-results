@@ -8,7 +8,7 @@ import { setStudent, startLoading, stopLoading } from '../features/results/resul
 import { getResults } from '../features/results/resultsService';
 
 
-export default function SearchBar({ width, size, boxShadow=true, style }) {
+export default function SearchBar({ width, size, boxShadow=true, style, className }) {
   const [rollNo, setRollNo] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function SearchBar({ width, size, boxShadow=true, style }) {
       dispatch(stopLoading());
   }
   return (
-    <Wrapper style={style} onSubmit={handleSearch} width={width} size={size} boxShadow={boxShadow}>
+    <Wrapper className={className} style={style} onSubmit={handleSearch} width={width} size={size} boxShadow={boxShadow}>
       <FiSearch onClick={handleSearch} id="icon" />
       <input onChange={(e) => setRollNo(e.target.value)} type="text" placeholder='Enter your Roll No'></input>
     </Wrapper>
@@ -35,6 +35,7 @@ const Wrapper = styled.form`
   width: ${props => props.width};
   position: relative;
   background-color: var(--white1);
+  z-index: 1;
   overflow: hidden;
   border-radius: var(--border-radius1);
   box-shadow: ${props => props.boxShadow ? 'var(--box-shadow1)' : 'none'};

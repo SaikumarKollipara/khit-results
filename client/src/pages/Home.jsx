@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components';
+import axios from 'axios';
 
 import Button from '../components/Button';
 import SearchBar from '../components/SearchBar';
+import { BACKEND_URL } from '../data/constants';
 
 export default function Home() {
+  (async () => {
+    await axios.get(BACKEND_URL);
+  })();
   return (
     <Wrapper>
       <Header>
@@ -12,7 +17,7 @@ export default function Home() {
         <Links>
           <span className="register">Register</span>
           <span className="or">or</span>
-          <Button color={'white'} bg={'black'}>Login</Button>
+          <Button size={'var(--font-size2)'} color={'white'} bg={'black'}>Login</Button>
         </Links>
       </Header>
       <ContentContainer>
@@ -21,7 +26,7 @@ export default function Home() {
           <p className='para2'>Exam Results.</p>
           <p className='para3'>Getting results online made easy</p>
           <p className='para4'>All we need is just you roll no.</p>
-          <SearchBar style={{marginTop: '3.5rem'}} width={'29rem'} size={'1.15rem'} />
+          <SearchBar className={'searchBar'} style={{marginTop: '3.5rem'}} size={'1.15rem'} />
         </Content>
         <Image src='/assets/images/exams-bro.svg' />
       </ContentContainer>
@@ -29,28 +34,15 @@ export default function Home() {
   )
 }
 
-const Wrapper = styled.div`
-  height: 100vh;
-  width: 100%;
-  padding: 0 13%;
-  background-image: linear-gradient(to bottom left, var(--blue1), var(--white2));
-  display: flex;
-  flex-direction: column;
-  `
+
 const Header = styled.div`
   width: 100%;
   margin-top: 2.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* padding: 0 13%;
-  position: fixed;
-  top: 0;
-  left: 0; */
 `
 const Logo = styled.img` 
-  /* font-size: 2rem;
-  font-weight: var(--font-weight4); */
   width: 4rem;
 `
 const Links = styled.div`
@@ -58,7 +50,7 @@ const Links = styled.div`
   align-items: center;
   gap: 1.5rem;
   .register {
-    font-size: 20px;
+    font-size: calc(var(--font-size3) - 4px);
     font-weight: var(--font-weight4);
     cursor: pointer;
   }
@@ -75,11 +67,10 @@ const ContentContainer = styled.div`
   align-items: center;
   position: relative;
   flex: 1;
-  /* margin-top: 9rem; */
-  /* border: 1px solid red; */
 `
 const Content = styled.div`
   width: 50%;
+  z-index: 1;
   .para1{
     font-size: var(--font-size5);
     line-height: 1;
@@ -95,7 +86,60 @@ const Content = styled.div`
   }
 `
 const Image = styled.img`
-  width: 43%;
+  width: 30rem;
   position: absolute;
   right: -5%;
+`
+const Wrapper = styled.div`
+  height: 100vh;
+  width: 100vw;
+  padding: 0 13%;
+  background-image: linear-gradient(to bottom left, var(--blue1), var(--white2));
+  display: flex;
+  flex-direction: column;
+  .searchBar {
+    width: 90%;
+  }
+
+  @media screen and (max-width: 1025px) {
+    padding: 20px;
+    && ${Header} {
+      margin-top: 0;
+    }
+    && ${Logo} {
+      width: 3rem;
+    }
+    && ${ContentContainer} {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    && ${Content} {
+      width: 100%;
+      text-align: center;
+    }
+    && ${Image} {
+      position: absolute;
+      bottom: -2rem;
+      right: -2rem;
+      opacity: 0.4;
+    }
+    .searchBar {
+      width: 30rem;
+      margin: 0 auto;
+    }
+  }
+  @media screen and (max-width: 501px) {
+    && ${Image} {
+      position: absolute;
+      width: 105%;
+      bottom: -5%;
+      opacity: 0.4;
+    }
+    .searchBar {
+      width: 100%;
+    }
+    
+  }
+
 `

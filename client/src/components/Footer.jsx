@@ -9,7 +9,7 @@ export default function Footer() {
 
 const Wrapper = styled.div`
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   position: fixed;
   bottom: 5px;
