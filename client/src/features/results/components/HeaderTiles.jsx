@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Header from "./Header";
 
 export function GreetingTile() {
   return <>
@@ -13,8 +12,16 @@ export function GreetingTile() {
   </>
 }
 
-export function SemesterTile() {
-  
+export function SemesterTile({ rollNo, number }) {
+  return <>
+    <Wrapper>
+      <div className='content'>
+        <Description style={{fontSize: 'var(--font-size1)'}} >Results of</Description>
+        <GreetingText>{rollNo.toUpperCase()}</GreetingText>
+      </div>
+      <SemesterNumber>{number}</SemesterNumber>
+    </Wrapper>
+  </>
 }
 
 const GreetingText = styled.p`
@@ -28,6 +35,15 @@ const Description = styled.p`
 const WavingHand = styled.img`
   width: 95px;
 `
+const SemesterNumber = styled.p`
+  font-size: calc(var(--font-size4) + 1rem);
+  font-weight: var(--font-weight4);
+  &::after {
+    content: 'sem';
+    position: relative;
+    font-size: var(--font-size2); 
+  }
+`
 const Wrapper = styled.div`
   width: 100%;
   min-height: 150px;
@@ -38,9 +54,16 @@ const Wrapper = styled.div`
   gap: 9rem;
   align-items: center;
   @media (max-width: 600px) {
-    gap: 1rem;
+    gap: 1.8rem;
+    justify-content: space-evenly;
     && ${WavingHand} {
       width: 4rem;
+    }
+    && ${GreetingText} {
+      font-size: var(--font-size3);
+    }
+    && ${SemesterNumber} {
+      font-size: var(--font-size5);
     }
   }
 `

@@ -98,6 +98,7 @@ button {
   .Toastify__toast--warning,
   .Toastify__toast--error {
     border-radius: var(--border-radius1);
+    margin-bottom: .5rem;
   }
 }
 @media (min-width: 2561px) {

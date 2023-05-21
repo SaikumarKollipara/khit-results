@@ -23,6 +23,7 @@ const Wrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 10;
   display: grid;
   place-content: center;
   /* .loading {

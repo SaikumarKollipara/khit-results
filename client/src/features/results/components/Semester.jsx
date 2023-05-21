@@ -49,16 +49,6 @@ export default function Semester({ semester }) {
   )
 }
 
-const Wrapper = styled.div`
-  width: 100%;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  background-color: var(--white2);
-  margin-bottom: 20px;
-  padding: 0 10px;
-  border-radius: var(--border-radius3);
-`
 const SemNumber = styled.div`
   width: 50px;
   height: 50px;
@@ -83,6 +73,30 @@ const Content = styled.div`
   align-items: flex-end;
   font-weight: var(--font-weight4);
   .number{
+    font-size: var(--font-size3);
+  }
+  .subscript{
+    font-weight: var(--font-weight3);
+    margin-bottom: 5px;
+  }
+  .not-available{
+    font-size: var(--font-size3);
+    color: var(--black2);
+    font-weight: var(--font-weight4);
+    margin-right: 3rem;
+  }
+`
+const Wrapper = styled.div`
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  background-color: var(--white2);
+  margin-bottom: 20px;
+  padding: 0 10px;
+  border-radius: var(--border-radius3);
+  @media (max-width: 600px) {
+  .number{
     font-size: var(--font-size2);
     font-weight: var(--font-weight5);
   }
@@ -91,10 +105,5 @@ const Content = styled.div`
     font-weight: var(--font-weight3);
     margin-bottom: 1px;
   }
-  .not-available{
-    font-size: var(--font-size3);
-    color: var(--black2);
-    font-weight: var(--font-weight4);
-    margin-right: 3rem;
   }
 `

@@ -1,45 +1,42 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useMediaQuery } from 'react-responsive';
 
 import LargeScreenLayout from '../components/LargeScreenLayout';
 import { Navigate } from 'react-router-dom';
 import { getSemestersData } from '../../../utils/helpers';
 import Semester from '../components/Semester';
-import Container from '../components/Container';
-import Graph from '../components/Graph';
-import CircularProgress from '../components/CircularProgress';
-import { getPercentage } from '../../../utils/helpers';
 import Button from '../../../components/Button';
 import { useReactToPrint } from 'react-to-print';
 import Heading from '../components/Heading';
 import MediumScreenLayout from '../components/MediumScreenLayout';
-import { ProgressTile, TextTile } from '../components/Tiles';
 import { GreetingTile } from '../components/HeaderTiles';
 import NavBar from '../components/NavBar';
 import SmallScreenLayout from '../components/SmallScreenLayout';
-import { setActiveTab, setScreenType } from '../resultsSlice';
+import { setActiveTab } from '../resultsSlice';
+import Overview from '../components/Overview';
 
 export default function AllResults() {
-  const { student, activeTab } = useSelector( store => store.results );
+  const { student, activeTab, screenType } = useSelector( store => store.results );
   if(Object.keys(student).length === 0) {
-    toast.warning('Search using Roll No');
+    toast.warning('Search using Roll No', {toastId: "Allresults"});
     return <Navigate to={'/'}/>;
   };
+  useEffect(()=>{
+    if (activeTab === 'subjects') {
+      dispatch(setActiveTab('semesters'));
+    } else {
+      dispatch(setActiveTab('overview'));
+    }
+  }, [])
   const dispatch = useDispatch();
   const semesters = getSemestersData(student);
   const printComponentRef = useRef();
-  const isLargeScreen = useMediaQuery({ minWidth: 1151 });
-  const isMediumScreen = useMediaQuery({ minWidth: 601, maxWidth: 1150 });
-  const isSmallScreen = useMediaQuery({ maxWidth: 600 });
-  if (isLargeScreen) dispatch(setScreenType('large'));
-  else if (isMediumScreen) dispatch(setScreenType('medium'));
-  else if (isSmallScreen) dispatch(setScreenType('small'));
+
   return (
     <>
-      {isLargeScreen &&     
+      {screenType === 'large' &&     
         <LargeScreenLayout>
           <GreetingTile />
           <div className="semesters-header">
@@ -51,23 +48,23 @@ export default function AllResults() {
           </SemestersContainer>
           <NavBar />
           <Heading text={'Overview'}/>
-          <Overview />
+          <Overview backlogs={student.finalResult.backlogs} gpa={student.finalResult.cgpa} type={'semesters'} />
         </LargeScreenLayout>
       }
-      {isMediumScreen && 
+      {screenType === 'medium' && 
         <MediumScreenLayout>
           <NavBar />
           <GreetingTile />
           <RollNo>Results of {student.rollNo.toUpperCase()}</RollNo>
           <Heading text={'Overview'}/>
-          <Overview />
+          <Overview backlogs={student.finalResult.backlogs} gpa={student.finalResult.cgpa} type={'semesters'} />
           <Heading text={'Semesters'} printComponentRef={printComponentRef} />
           <SemestersContainer ref={printComponentRef} >
             {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
           </SemestersContainer>
         </MediumScreenLayout>
       }
-      {isSmallScreen && 
+      {screenType === 'small' && 
         <SmallScreenLayout>
           <NavBar />
           <GreetingTile />
@@ -84,7 +81,9 @@ export default function AllResults() {
               size={'var(--font-size1)'} 
             >Semesters</Button>
           </Buttons>
-          {activeTab === 'overview' && <Overview />}
+          {activeTab === 'overview' && 
+            <Overview backlogs={student.finalResult.backlogs} gpa={student.finalResult.cgpa} type={'semesters'} />
+          }
           {activeTab === 'semesters' && 
             <SemestersContainer ref={printComponentRef} >
               {semesters.map((semester, idx) => <Semester key={idx} semester={semester} />)}
@@ -97,32 +96,6 @@ export default function AllResults() {
   )
 }
 
-
-function Overview() {
-  const { student } = useSelector( store => store.results );
-  return <>
-    <GridContainer >
-      <TextTile title={student.regulation.toUpperCase()} description={student.branch} />
-      <TextTile title={student.finalResult.backlogs.length} description={'Total Backlogs'} />
-      <ProgressTile progress={student.finalResult.cgpa} text={'Total GPA'} type={'gpa'} />
-      <ProgressTile progress={getPercentage(student.finalResult.cgpa)} text={'Total Percentage'} type={'percentage'} />
-      <div id='graph'><Graph /></div>
-    </GridContainer>
-  </>
-}
-
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: calc(50% - 10px) calc(50% - 10px);
-  grid-template-rows: 115px 115px auto;
-  gap: 20px;
-  #graph {
-    grid-column: 1 / -1;
-  }
-  @media (max-width: 600px) {
-    gap: 1rem;
-  }
-`
 const RollNo = styled.p`
   font-size: var(--font-size1);
   font-weight: var(--font-weight4);

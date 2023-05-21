@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   align-items: flex-start;
   text-align: center;
   background-color: var(--white2);
-  padding: 7px 15px;
+  padding: 7px 7px;
   border-radius: ${props => props.idx === 0 ? 'var(--border-radius1) var(--border-radius1) 0 0':''};
   border-radius: ${props => props.idx === props.length-1 ? '0 0 var(--border-radius1) var(--border-radius1)':''};
   .subCode {
@@ -29,8 +29,9 @@ const Wrapper = styled.div`
     text-align: left;
   }
   .subName {
-    flex: 2;
+    flex: 3;
     text-align: left;
+    padding: 0 1rem;
   }
   .grade {
     flex: 1;

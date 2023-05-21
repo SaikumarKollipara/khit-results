@@ -9,6 +9,7 @@ const URL = `${BACKEND_URL}/api/v1/results/`;
 export async function getResults(rollNo) {
   rollNo = rollNo.toLowerCase();
   try {
+    if (!rollNo.match(/^\d{2}8x(1|5)(a|d|e|f|r|s|t)\d{2}[a-z0-9]{2}$/)) throw new Error('Invalid Roll No');
     const { data } = await axios.get(URL+rollNo);
     return data.student;
   } catch(err) {

@@ -35,6 +35,7 @@ export default function Graph() {
     plugins: {
       legend: {
         position: "bottom",
+        display: false
       },
     },
   };
