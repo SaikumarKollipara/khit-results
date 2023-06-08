@@ -26,7 +26,6 @@ export default function SemResults() {
   const dispatch = useDispatch();
   const { sem, rollNo } = useParams();
   const printComponentRef = useRef();
-  dispatch(setCurrentSemester(student.sems[deFormatSemNumber(sem)]));
   const subjects = currentSemester.final.results;
   useEffect(()=>{
     dispatch(setActiveTab('subjects'));
@@ -91,12 +90,14 @@ export default function SemResults() {
               size={'var(--font-size1)'} 
             >Overview</Button>
           </Buttons>
-          <TableHeader>
+          {activeTab === 'subjects' &&
+            <TableHeader>
               <span className='code'>Code</span>
               <span className='name'>Name</span>
               <span className='grade'>Grade</span>
               <span className='credits'>Credits</span>
-          </TableHeader>
+            </TableHeader>
+          }
         </div>
         {activeTab === 'subjects' && 
           <SubjectsContainer ref={printComponentRef} >
@@ -132,6 +133,7 @@ const TableHeader = styled.div`
   }
   @media (max-width: 600px) {
     margin-top: 1.5rem;
+    padding-right: 0px;
   }
 `
 const RollNo = styled.p`

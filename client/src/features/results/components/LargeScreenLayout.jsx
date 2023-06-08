@@ -34,7 +34,7 @@ export default function LargeScreenLayout({ children=['', ''] }) {
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   padding: 2.2rem 8.5%;
   display: flex;

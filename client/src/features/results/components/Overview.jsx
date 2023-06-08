@@ -25,11 +25,8 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: calc(50% - 10px) calc(50% - 10px);
   grid-template-rows: 115px 115px auto;
-  gap: 20px;
+  gap: 10px;
   #graph {
     grid-column: 1 / -1;
-  }
-  @media (max-width: 600px) {
-    gap: 1rem;
   }
 `

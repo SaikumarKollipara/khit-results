@@ -24,7 +24,7 @@ export default function SmallScreenLayout({ children }) {
 
 const Wrapper = styled.div`
   width: 100%;  
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   padding: 1.6rem 1rem;
   background-color: var(--blue2);

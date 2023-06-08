@@ -44,3 +44,7 @@ export function deFormatSemNumber(number) {
 export function getPercentage(gpa) {
   return (gpa * 10) - 7.5;
 }
+
+export function toPascalCase(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}

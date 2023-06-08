@@ -1,14 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaArrowRight } from 'react-icons/fa';
 
 import Button from '../../../components/Button';
+import { setCurrentSemester } from '../resultsSlice';
+import { deFormatSemNumber } from '../../../utils/helpers';
 
 export default function Semester({ semester }) {
   const { student, screenType } = useSelector(store => store.results );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  function handleClick() {
+    dispatch(setCurrentSemester(student.sems[deFormatSemNumber(semester.number)]));  
+    navigate(`/results/${semester.number}/${student.rollNo}`);
+  }
   return (
     <Wrapper>
       <SemNumber>{semester.number}</SemNumber>
@@ -29,11 +36,11 @@ export default function Semester({ semester }) {
           </Content>
         </ContentWrapper>
         {screenType === 'small' ?
-          <Button style={{padding: '8px 12px'}} onClick={()=>navigate(`/results/${semester.number}/${student.rollNo}`)} size={'var(--font-size1)'}>
+          <Button style={{padding: '8px 12px'}} onClick={handleClick} size={'var(--font-size1)'}>
             {screenType === 'small' ? <FaArrowRight /> : 'View Details'}
           </Button>
           :
-          <Button onClick={()=>navigate(`/results/${semester.number}/${student.rollNo}`)} size={'var(--font-size1)'}>
+          <Button onClick={handleClick} size={'var(--font-size1)'}>
             View Details
           </Button>
         }
@@ -92,7 +99,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   background-color: var(--white2);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 0 10px;
   border-radius: var(--border-radius3);
   @media (max-width: 600px) {

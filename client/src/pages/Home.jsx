@@ -91,7 +91,7 @@ const Image = styled.img`
   right: -5%;
 `
 const Wrapper = styled.div`
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
   padding: 2rem 13%;

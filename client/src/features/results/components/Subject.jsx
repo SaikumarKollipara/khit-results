@@ -2,13 +2,15 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
+import { toPascalCase } from '../../../utils/helpers';
+
 export default function Subject({ subject, idx }) {
   const { currentSemester } = useSelector(store => store.results );
   return (
     <Wrapper idx={idx} length={currentSemester.final.results.length} >
       <p className='subCode' >{subject.subCode.toUpperCase()}</p>
-      <p className='subName' >{subject.subName}</p>
-      <p className='grade' >{subject.grade.toUpperCase()}</p>
+      <p className='subName' >{toPascalCase(subject.subName)}</p>
+      <p className='grade' >{toPascalCase(subject.grade)}</p>
       <p className='credits' >{subject.credits}</p>
     </Wrapper>
   )
