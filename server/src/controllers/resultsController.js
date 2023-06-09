@@ -67,7 +67,7 @@ export async function getResults(req, res, next) {
   try {
     const rollNo = req.params.rollNo;
     const student = await Student.findOne({ rollNo });
-    if(!student) return res.status(400).json({ success: false, message: 'Invalid Roll No' });
+    if(!student) return res.status(400).json({ success: false, message: 'Student Not Found' });
     return res.status(200).json({ success: true, student });
   } catch (err) {
     next(err);
